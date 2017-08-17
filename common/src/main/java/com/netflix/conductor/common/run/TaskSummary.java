@@ -64,7 +64,9 @@ public class TaskSummary {
 	private String taskDefName;
 	
 	private String taskType;
-	
+
+    private String referenceTaskName;
+
 	public TaskSummary(Task task) {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -72,6 +74,7 @@ public class TaskSummary {
     	
     	this.taskDefName = task.getTaskDefName();
     	this.taskType = task.getTaskType();
+    	this.referenceTaskName = task.getReferenceTaskName();
 		this.workflowId = task.getWorkflowInstanceId();
 		this.taskId = task.getTaskId();
 		this.inputData = task.getInputData();
@@ -295,5 +298,17 @@ public class TaskSummary {
 		this.taskType = taskType;
 	}
 
-	
+	/**
+	 * @return the referenceTaskName
+	 */
+	public String getReferenceTaskName() {
+		return referenceTaskName;
+	}
+
+	/**
+	 * @param referenceTaskName the referenceTaskName to set
+	 */
+	public void setReferenceTaskName(String referenceTaskName) {
+		this.referenceTaskName = referenceTaskName;
+	}
 }
