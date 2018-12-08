@@ -152,7 +152,7 @@ public class DeciderService {
 				List<Task> nextTasks = getNextTask(def, workflow, task);
 				nextTasks.forEach(rt -> tasksToBeScheduled.put(rt.getReferenceTaskName(), rt));
 				outcome.tasksToBeUpdated.add(task);
-				logger.debug("Scheduling Tasks from " + task.getTaskDefName() + ", next = " + nextTasks.stream().map(t -> t.getTaskDefName()).collect(Collectors.toList()));				
+				logger.error("Scheduling Tasks from " + task.getTaskDefName() + ", next = " + nextTasks.stream().map(t -> t.getTaskDefName()).collect(Collectors.toList()));				
 			}
 		}
 		
