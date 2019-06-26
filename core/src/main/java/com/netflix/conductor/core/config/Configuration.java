@@ -54,7 +54,10 @@ public interface Configuration {
     boolean JERSEY_ENABLED_DEFAULT_VALUE = true;
 
     String ADDITIONAL_MODULES_PROPERTY_NAME = "conductor.additional.modules";
-
+    String KAFKA_BROKERS="localhost:9092";
+    String CLIENT_ID="client1";
+    String TOPIC_NAME="demo3";
+    String ISKAFKA_ENABLED= "True";
     //TODO add constants for input/output external payload related properties.
 
     default DB getDB() {

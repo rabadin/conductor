@@ -82,7 +82,8 @@ public class WorkflowExecutor {
     private final Configuration config;
     private final MetadataMapperService metadataMapperService;
     private final ExecutionDAOFacade executionDAOFacade;
-
+    @com.google.inject.Inject(optional=true)
+    private  final TaskStatusPublisher taskStatusPublisher=null ;
     private WorkflowStatusListener workflowStatusListener;
 
     private int activeWorkerLastPollInSecs;
@@ -106,6 +107,7 @@ public class WorkflowExecutor {
         this.executionDAOFacade = executionDAOFacade;
         this.activeWorkerLastPollInSecs = config.getIntProperty("tasks.active.worker.lastpoll", 10);
         this.workflowStatusListener = workflowStatusListener;
+
     }
 
     /**
@@ -536,6 +538,7 @@ public class WorkflowExecutor {
             decide(parent.getWorkflowId());
         }
         Monitors.recordWorkflowCompletion(workflow.getWorkflowName(), workflow.getEndTime() - workflow.getStartTime(), wf.getOwnerApp());
+        taskStatusPublisher.publishWorkflowStatus(workflow);
         queueDAO.remove(DECIDER_QUEUE, workflow.getWorkflowId());    //remove from the sweep queue
 
         if (workflow.getWorkflowDefinition().isWorkflowStatusListenerEnabled()) {
@@ -1180,6 +1183,8 @@ public class WorkflowExecutor {
     private void addTaskToQueue(final List<Task> tasks) {
         for (Task task : tasks) {
             addTaskToQueue(task);
+            if(config.ISKAFKA_ENABLED.equalsIgnoreCase("true"))
+                taskStatusPublisher.publishTaskStatus(task);
         }
     }
 

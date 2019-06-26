@@ -8,6 +8,7 @@ import com.netflix.conductor.contribs.http.HttpTask;
 import com.netflix.conductor.contribs.http.RestClientManager;
 import com.netflix.conductor.contribs.json.JsonJqTransform;
 import com.netflix.conductor.core.config.Configuration;
+import com.netflix.conductor.core.events.kafka.KafkaModule;
 import com.netflix.conductor.core.execution.WorkflowExecutorModule;
 import com.netflix.conductor.core.utils.DummyPayloadStorage;
 import com.netflix.conductor.core.utils.S3PayloadStorage;
@@ -103,6 +104,11 @@ public class ModulesProvider implements Provider<List<AbstractModule>> {
         modules.add(new ElasticSearchModule());
 
         modules.add(new WorkflowExecutorModule());
+        if(configuration.ISKAFKA_ENABLED.equalsIgnoreCase("true")) {
+            logger.info("adding kafka module");
+            modules.add(new KafkaModule());
+            logger.info("Module Added");
+        }
 
         if (configuration.getJerseyEnabled()) {
             modules.add(new JerseyModule());

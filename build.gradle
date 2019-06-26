@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:4.0.1'
         classpath 'org.apache.ant:ant:1.9.7'
+        classpath 'org.apache.kafka:kafka-clients:1.1.0'
     }
 }
 plugins {
