@@ -46,13 +46,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Comparator; 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import static com.netflix.conductor.common.metadata.tasks.Task.Status.CANCELED;
 import static com.netflix.conductor.common.metadata.tasks.Task.Status.COMPLETED;
 import static com.netflix.conductor.common.metadata.tasks.Task.Status.FAILED;
@@ -400,37 +400,43 @@ public class WorkflowExecutor {
             throw new ApplicationException(CONFLICT, "Workflow has not started yet");
         }
 
-        List<Task> failedTasks = getFailedTasksToRetry(workflow);
+        Map<String, Task> retriableMap = new HashMap<>();
+        for (Task task : workflow.getTasks()) {
+            switch (task.getStatus()) {
+                case FAILED:
+                    retriableMap.put(task.getReferenceTaskName(), task);
+                    break;
+                case CANCELED:
+                    if (task.getTaskType().equalsIgnoreCase(TaskType.JOIN.toString())) {
+                        task.setStatus(IN_PROGRESS);
+                        // Task doesn't have to updated yet. Will be updated along with other Workflow tasks downstream.
+                    } else {
+                        retriableMap.put(task.getReferenceTaskName(), task);
+                    }
+                    break;
+                default:
+                    retriableMap.remove(task.getReferenceTaskName());
+                    break;
+            }
+        }
 
-        List<Task> cancelledTasks = workflow.getTasks().stream()
-                .filter(t -> CANCELED.equals(t.getStatus()))
-                .collect(Collectors.toList());
-
-        if (failedTasks.isEmpty()) {
+         if (retriableMap.values().size() == 0) {
             throw new ApplicationException(CONFLICT,
-                    "There are no failed tasks! Use restart if you want to attempt entire workflow execution again.");
+                    "There are no retriable tasks! Use restart if you want to attempt entire workflow execution again.");
         }
 
         // set workflow to RUNNING status
         workflow.setStatus(WorkflowStatus.RUNNING);
         executionDAOFacade.updateWorkflow(workflow);
+   
+        List<Task> retriableTasks = retriableMap.values().stream()
+                .sorted(Comparator.comparingInt(Task::getSeq))
+                .map(this::taskToBeRescheduled)
+                .collect(Collectors.toList());
 
-        List<Task> rescheduledTasks = new ArrayList<>();
-        failedTasks.forEach(failedTask -> rescheduledTasks.add(taskToBeRescheduled(failedTask)));
-
-        // Reschedule the cancelled task but if the join is cancelled set that to in progress
-        cancelledTasks.forEach(task -> {
-            if (task.getTaskType().equalsIgnoreCase(TaskType.JOIN.toString())) {
-                task.setStatus(IN_PROGRESS);
-                executionDAOFacade.updateTask(task);
-            } else {
-                rescheduledTasks.add(taskToBeRescheduled(task));
-            }
-        });
-
-        scheduleTask(workflow, rescheduledTasks);
-        dedupAndAddTasks(workflow, rescheduledTasks);
+        scheduleTask(workflow, retriableTasks);
         executionDAOFacade.updateTasks(workflow.getTasks());
+        dedupAndAddTasks(workflow, retriableTasks);
 
         decide(workflowId);
     }
@@ -792,7 +798,6 @@ public class WorkflowExecutor {
 
         // If it is a new workflow, the tasks will be still empty even though include tasks is true
         Workflow workflow = executionDAOFacade.getWorkflowById(workflowId, true);
-
         // FIXME Backwards compatibility for legacy workflows already running.
         // This code will be removed in a future version.
         workflow = metadataMapperService.populateWorkflowWithDefinitions(workflow);
@@ -1255,6 +1260,7 @@ public class WorkflowExecutor {
                 workflow.setInput(workflowInput);
             }
             executionDAOFacade.updateWorkflow(workflow);
+            executionDAOFacade.updateTasks(workflow.getTasks());
 
             // Remove all tasks after the "rerunFromTask"
             for (Task task : workflow.getTasks()) {
@@ -1262,9 +1268,17 @@ public class WorkflowExecutor {
                     executionDAOFacade.removeTask(task.getTaskId());
                 }
             }
+            //reset fields before restarting the task
+            rerunFromTask.setScheduledTime(System.currentTimeMillis());
+            rerunFromTask.setStartTime(0);
+            rerunFromTask.setUpdateTime(0);
+            rerunFromTask.setEndTime(0);
+            rerunFromTask.setOutputData(null);
+            rerunFromTask.setExternalOutputPayloadStoragePath(null);
             if (rerunFromTask.getTaskType().equalsIgnoreCase(SubWorkflow.NAME)) {
-                // if task is sub workflow set task as IN_PROGRESS
+                // if task is sub workflow set task as IN_PROGRESS and reset start time
                 rerunFromTask.setStatus(IN_PROGRESS);
+                rerunFromTask.setStartTime(System.currentTimeMillis());
             } else {
                 // Set the task to rerun as SCHEDULED
                 rerunFromTask.setStatus(SCHEDULED);
