@@ -353,7 +353,7 @@ public class ExecutionService {
 			try {
 				return new WorkflowSummary(executionDAOFacade.getWorkflowById(workflowId,false));
 			} catch(Exception e) {
-				logger.error("Error fetching workflow by id: {}", workflowId, e.getMessage());
+				logger.error("Error fetching workflow by id: {}", workflowId, e);
 				return null;
 			}
 		}).filter(Objects::nonNull).collect(Collectors.toList());
@@ -371,7 +371,7 @@ public class ExecutionService {
 						String workflowId = taskSummary.getWorkflowId();
 						return new WorkflowSummary(executionDAOFacade.getWorkflowById(workflowId, false));
 					} catch (Exception e) {
-						logger.error("Error fetching workflow by id: {}", taskSummary.getWorkflowId(), e.getMessage());
+						logger.error("Error fetching workflow by id: {}", taskSummary.getWorkflowId(), e);
 						return null;
 					}
 				})
