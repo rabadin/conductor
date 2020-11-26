@@ -30,6 +30,7 @@ import vc.inreach.aws.request.AWSSigningRequestInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class ElasticSearchRestClientProvider implements Provider<RestClient> {
     private static Logger logger = LoggerFactory.getLogger(ElasticSearchRestClientProvider.class);
     private final ElasticSearchConfiguration configuration;
@@ -68,6 +69,20 @@ public class ElasticSearchRestClientProvider implements Provider<RestClient> {
         }
 
         return RestClient.builder(httpHosts).build();
+
+        // Below code is a conflict, adds with commit
+        // https://github.com/Netflix/conductor/commit/f5e9e10d6c897057359a262f78b476ae9fefc099
+        /*
+        RestClientBuilder restClientBuilder = RestClient.builder(convertToHttpHosts(configuration.getURIs()));
+
+        if (configuration.getElasticsearchRestClientConnectionRequestTimeout() > 0) {
+            restClientBuilder.setRequestConfigCallback(requestConfigBuilder -> requestConfigBuilder.setConnectionRequestTimeout(configuration.getElasticsearchRestClientConnectionRequestTimeout()));
+        }
+
+        return restClientBuilder.build();
+
+         */
+
     }
 
     private HttpHost[] convertToHttpHosts(List<URI> hosts) {

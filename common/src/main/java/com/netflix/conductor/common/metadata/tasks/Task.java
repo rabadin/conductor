@@ -816,7 +816,6 @@ public class Task {
    * Note: This does not copy the following fields:
    * <ul>
    * <li>retried</li>
-   * <li>seq</li>
    * <li>updateTime</li>
    * <li>retriedTaskId</li>
    * </ul>
