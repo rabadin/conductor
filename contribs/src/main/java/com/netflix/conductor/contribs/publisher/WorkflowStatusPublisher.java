@@ -5,7 +5,9 @@ import com.netflix.conductor.core.execution.WorkflowStatusListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -16,6 +18,7 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
     private static final String NOTIFICATION_TYPE = "workflow/WorkflowNotifications";
     private static final Integer QDEPTH = Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_NOTIFICATION_QUEUE_SIZE", "50"));
     private BlockingQueue<Workflow> blockingQueue = new LinkedBlockingDeque<>(QDEPTH);
+    private RestClientManager rcm;
 
     class ExceptionHandler implements Thread.UncaughtExceptionHandler
     {
@@ -64,7 +67,10 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
         }
     }
 
-    public WorkflowStatusPublisher() {
+    @Inject
+    public WorkflowStatusPublisher(RestClientManager rcm) {
+        this.rcm = rcm;
+        LOGGER.info("RRRRR RestClientManager {}", rcm.hashCode());
         ConsumerThread consumerThread = new ConsumerThread();
         consumerThread.start();
     }
@@ -89,10 +95,15 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
         }
     }
 
-     private void publishWorkflowNotification(WorkflowNotification workflowNotification) {
+     private void publishWorkflowNotification(WorkflowNotification workflowNotification) throws IOException {
         String jsonWorkflow = workflowNotification.toJsonString();
-        RestClient rc = new RestClient();
-        String url = rc.createUrl(NOTIFICATION_TYPE);
-        rc.post(url, jsonWorkflow, workflowNotification.getDomainGroupMoId(), workflowNotification.getAccountMoId());
+        //RestClientManagerX rc = new RestClientManagerX();
+        //String url = rc.createUrl(NOTIFICATION_TYPE);
+        rcm.postNotification(
+                RestClientManager.NotificationType.WORKFLOW,
+                jsonWorkflow, workflowNotification.getDomainGroupMoId(),
+                workflowNotification.getAccountMoId(),
+                workflowNotification.getWorkflowId()
+                );
     }
 }

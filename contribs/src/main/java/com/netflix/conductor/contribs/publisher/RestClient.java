@@ -4,11 +4,13 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import org.apache.http.HttpStatus;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RestClient {
-
+    CloseableHttpClient httpClient = HttpClients.createDefault();
     private static final Logger LOGGER = LoggerFactory.getLogger(RestClient.class);
     private static final String URL = "http://bullwinkle.default.svc.cluster.local:7979/v1";
     private static final String HEADER_DOMAIN_GROUP = "X-Starship-DomainGroup";
@@ -26,7 +28,7 @@ public class RestClient {
     }
 
     public void post(String uri, String input, String domainGroupMoId, String accountMoId) {
-        int timeoutInSeconds = 10;
+        int timeoutInSeconds = 100;
         client.setConnectTimeout(1000 * timeoutInSeconds);
         client.setReadTimeout(1000 * timeoutInSeconds );
 
