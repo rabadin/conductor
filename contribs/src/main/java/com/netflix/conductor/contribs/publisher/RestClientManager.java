@@ -10,7 +10,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,17 +18,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-
-https://www.baeldung.com/httpclient-timeout
-the Connection Timeout (http.connection.timeout) – the time to establish the connection with the remote host
-the Socket Timeout (http.socket.timeout) – the time waiting for data – after establishing the connection; maximum time of inactivity between two data packets
-the Connection Manager Timeout (http.connection-manager.timeout) – the time to wait for a connection from the connection manager/pool
-
- https://learnbyinsight.com/2020/06/29/httpclient-single-instance-or-multiple/
-
- https://www.programcreek.com/java-api-examples/?api=org.apache.http.impl.conn.PoolingHttpClientConnectionManager
- */
 @Singleton
 public class RestClientManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestClientManager.class);
@@ -38,6 +26,7 @@ public class RestClientManager {
         TASK,
         WORKFLOW
     };
+
     private static final String TASK_NOTIFICATION_ENDPOINT = "workflow/TaskNotifications";
     private static final String WORKFLOW_NOTIFICATION_ENDPOINT = "workflow/WorkflowNotifications";
     private static final String URL = "http://bullwinkle.default.svc.cluster.local:7979/v1";
@@ -136,15 +125,12 @@ public class RestClientManager {
     }
 
     private void executePost(HttpPost httpPost) throws IOException {
-        CloseableHttpResponse response = client.execute(httpPost);
-        try {
+        try (CloseableHttpResponse response = client.execute(httpPost)) {
             int sc = response.getStatusLine().getStatusCode();
-            if (!(sc == HttpStatus.SC_ACCEPTED || sc == HttpStatus.SC_OK)){
+            if (!(sc == HttpStatus.SC_ACCEPTED || sc == HttpStatus.SC_OK)) {
                 throw new ClientProtocolException("Unexpected response status: " + sc);
             }
-        }
-        finally {
-            response.close();
+        } finally {
             httpPost.releaseConnection(); // release the connection gracefully so the connection can be reused by connection manager
         }
     }

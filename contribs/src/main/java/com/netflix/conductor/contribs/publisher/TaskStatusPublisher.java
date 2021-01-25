@@ -15,7 +15,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class TaskStatusPublisher implements TaskStatusListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskStatusPublisher.class);
-    //private static final String NOTIFICATION_TYPE = "workflow/TaskNotifications";
     private static final Integer QDEPTH = Integer.parseInt(System.getenv().getOrDefault("ENV_TASK_NOTIFICATION_QUEUE_SIZE", "50"));
     private BlockingQueue<Task> blockingQueue = new LinkedBlockingDeque<>(QDEPTH);
 
@@ -28,8 +27,8 @@ public class TaskStatusPublisher implements TaskStatusListener {
             LOGGER.info("An exception has been captured\n");
             LOGGER.info("Thread: {}\n", t.getName());
             LOGGER.info("Exception: {}: {}\n", e.getClass().getName(), e.getMessage());
-            LOGGER.info("Stack Trace: \n");
-            e.printStackTrace(System.out);
+            //LOGGER.info("Stack Trace: \n");
+            //e.printStackTrace(System.out);
             LOGGER.info("Thread status: {}\n", t.getState());
             new ConsumerThread().start();
         }
@@ -90,7 +89,7 @@ public class TaskStatusPublisher implements TaskStatusListener {
             blockingQueue.put(task);
         } catch (Exception e){
             LOGGER.error("Failed to enqueue task: Id {} Type {} of workflow {} ", task.getTaskId(), task.getTaskType(), task.getWorkflowInstanceId());
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e.toString());
         }
     }
 
