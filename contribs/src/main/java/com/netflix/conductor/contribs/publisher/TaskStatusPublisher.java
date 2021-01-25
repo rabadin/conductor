@@ -42,20 +42,12 @@ public class TaskStatusPublisher implements TaskStatusListener {
             String tName = Thread.currentThread().getName();
             LOGGER.info("{}: Starting consumer thread", tName);
             Task task;
-            TaskNotification taskNotification;
-            String jsonTask;
-            LOGGER.info("##### 5555");
+            TaskNotification taskNotification = null;
             while (true) {
                 try {
-                    LOGGER.info("##### 6666");
                     task = blockingQueue.take();
-                    LOGGER.info("##### 6666xxx");
-                    if (task == null) {
-                        continue;
-                    }
-                    LOGGER.info("##### 7777");
                     taskNotification = new TaskNotification(task);
-                    jsonTask = taskNotification.toJsonString();
+                    String jsonTask = taskNotification.toJsonString();
                     LOGGER.info("Start Publishing TaskNotification: {}", jsonTask);
                     if (taskNotification.getTaskType().equals("SUB_WORKFLOW")) {
                         LOGGER.info("Skip task '{}' notification. Task type is SUB_WORKFLOW.", taskNotification.getTaskId());
@@ -70,16 +62,16 @@ public class TaskStatusPublisher implements TaskStatusListener {
                         continue;
                     }
                     publishTaskNotification(taskNotification);
-                    LOGGER.info("##### 8888");
-                    //blockingQueue.take();
-                    LOGGER.info("##### 9999");
                     LOGGER.debug("Task {} publish is successful.", taskNotification.getTaskId());
                     Thread.sleep(5);
                 }
                 catch (Exception e) {
-                    LOGGER.error("Failed to publish task: {} to String. Exception: {} ", this, e);
-                    e.printStackTrace(System.out);
-                    LOGGER.error(e.getMessage());
+                    if (taskNotification != null) {
+                        LOGGER.error("Failed to publish task: {}", taskNotification.getWorkflowId());
+                    } else {
+                        LOGGER.error("Failed to publish task: Task is NULL");
+                    }
+                    LOGGER.error(e.toString());
                 }
             }
         }
@@ -88,29 +80,22 @@ public class TaskStatusPublisher implements TaskStatusListener {
     @Inject
     public TaskStatusPublisher(RestClientManager rcm) {
         this.rcm = rcm;
-        LOGGER.info("RRRRR RestClientManager {}", rcm.hashCode());
         ConsumerThread consumerThread = new ConsumerThread();
-        LOGGER.info("##### 3333");
         consumerThread.start();
-        LOGGER.info("##### 4444");
     }
 
     @Override
     public void onTaskScheduled(Task task) {
         try {
-            LOGGER.info("##### 1111");
             blockingQueue.put(task);
-            LOGGER.info("##### 2222");
         } catch (Exception e){
-            LOGGER.error("Failed to enqueue task: {} to String. Exception: {}", this, e);
+            LOGGER.error("Failed to enqueue task: Id {} Type {} of workflow {} ", task.getTaskId(), task.getTaskType(), task.getWorkflowInstanceId());
             LOGGER.error(e.getMessage());
         }
     }
 
     private void publishTaskNotification(TaskNotification taskNotification) throws IOException {
         String jsonTask = taskNotification.toJsonString();
-        LOGGER.info(rcm.toString());
-        //String url = rc.createUrl(NOTIFICATION_TYPE);
         rcm.postNotification(
                 RestClientManager.NotificationType.TASK,
                 jsonTask,

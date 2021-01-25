@@ -41,10 +41,11 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
             String tName = Thread.currentThread().getName();
             LOGGER.info("{}: Starting consumer thread", tName);
 
+            WorkflowNotification workflowNotification = null;
             while (true) {
                 try {
                     Workflow workflow = blockingQueue.take();
-                    WorkflowNotification workflowNotification = new WorkflowNotification(workflow);
+                    workflowNotification = new WorkflowNotification(workflow);
                     String jsonWorkflow = workflowNotification.toJsonString();
                     LOGGER.info("Publishing WorkflowNotification: {}", jsonWorkflow);
                     if (workflowNotification.getAccountMoId().equals("")) {
@@ -60,8 +61,12 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
                     Thread.sleep(5);
                 }
                 catch (Exception e) {
-                    LOGGER.error("Failed to publish workflow: {} to String. Exception: {}", this, e);
-                    LOGGER.error(e.getMessage());
+                    if (workflowNotification != null) {
+                        LOGGER.error("Failed to publish workflow: {}", workflowNotification.getWorkflowId());
+                    } else {
+                        LOGGER.error("Failed to publish workflow: Workflow is NULL");
+                    }
+                    LOGGER.error(e.toString());
                 }
             }
         }
@@ -70,7 +75,6 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
     @Inject
     public WorkflowStatusPublisher(RestClientManager rcm) {
         this.rcm = rcm;
-        LOGGER.info("RRRRR RestClientManager {}", rcm.hashCode());
         ConsumerThread consumerThread = new ConsumerThread();
         consumerThread.start();
     }
@@ -80,7 +84,7 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
         try {
             blockingQueue.put(workflow);
         } catch (Exception e){
-            LOGGER.error("Failed to enqueue workflow: {} to String. Exception: {}", this, e);
+            LOGGER.error("Failed to enqueue workflow: Id {} Name {}", workflow.getWorkflowId(), workflow.getWorkflowName());
             LOGGER.error(e.getMessage());
         }
     }
@@ -90,15 +94,13 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
         try {
             blockingQueue.put(workflow);
         } catch (Exception e){
-            LOGGER.error("Failed to enqueue workflow: {} to String. Exception: {}", this, e);
+            LOGGER.error("Failed to enqueue workflow: Id {} Name {}", workflow.getWorkflowId(), workflow.getWorkflowName());
             LOGGER.error(e.getMessage());
         }
     }
 
      private void publishWorkflowNotification(WorkflowNotification workflowNotification) throws IOException {
         String jsonWorkflow = workflowNotification.toJsonString();
-        //RestClientManagerX rc = new RestClientManagerX();
-        //String url = rc.createUrl(NOTIFICATION_TYPE);
         rcm.postNotification(
                 RestClientManager.NotificationType.WORKFLOW,
                 jsonWorkflow, workflowNotification.getDomainGroupMoId(),
