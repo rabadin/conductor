@@ -249,7 +249,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         }
 
         try {
-            Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this::pruneWorkflowsAndTasks, 0, 1, TimeUnit.MINUTES);
+            Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this::pruneWorkflowsAndTasks, 0, config.pruningIntervalInMinutes(), TimeUnit.MINUTES);
         } catch (Exception e) {
             logger.error("Error during pruning of workflows and tasks in index", e);
         }
@@ -838,7 +838,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
             logger.error("Unable to communicate with ES to groom {}", docType, e);
         }
 
-        logger.info("ES pruning completed for '{}' on thread '{}': Total {}, Pruned {}, SearchTime {} ms, PruningTime {} ms", docType, Thread.currentThread().getName(), totalDocs, prunedDocs, searchTimeinMills, pruneTimeinMills);
+        logger.info("ES pruning completed for '{}': Total {}, Pruned {}, SearchTime {} ms, PruningTime {} ms", docType, totalDocs, prunedDocs, searchTimeinMills, pruneTimeinMills);
     }
 
     private void indexObject(final String index, final String docType, final String docId, final Object doc) {

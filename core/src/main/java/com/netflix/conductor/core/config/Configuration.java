@@ -102,6 +102,9 @@ public interface Configuration {
     String INDEXING_ENABLED_PROPERTY_NAME = "workflow.indexing.enabled";
     boolean INDEXING_ENABLED_DEFAULT_VALUE = true;
 
+    String INDEX_PRUNING_INTERVAL_TIME_MINUTES_PROPERTY_NAME = "workflow.index.pruning.interval.time.minutes";
+    int INDEX_PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE = 1;
+
     String TASK_DEF_REFRESH_TIME_SECS_PROPERTY_NAME = "conductor.taskdef.cache.refresh.time.seconds";
     int TASK_DEF_REFRESH_TIME_SECS_DEFAULT_VALUE = 60;
 
@@ -171,6 +174,13 @@ public interface Configuration {
      */
     default boolean isIndexingPersistenceEnabled() {
             return getBooleanProperty(INDEXING_ENABLED_PROPERTY_NAME, INDEXING_ENABLED_DEFAULT_VALUE);
+    }
+
+    /**
+     * @return delay time in minutes to execute pruning schedule
+     */
+    default int pruningIntervalInMinutes() {
+        return getIntProperty(INDEX_PRUNING_INTERVAL_TIME_MINUTES_PROPERTY_NAME, INDEX_PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE);
     }
 
     /**
