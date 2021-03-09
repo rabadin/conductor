@@ -750,6 +750,10 @@ public class ElasticSearchDAOV5 implements IndexDAO {
     }
 
     @Override
+    public void pruneWorkflowsAndTasks() {
+    }
+
+    @Override
     public List<String> searchRecentRunningWorkflows(int lastModifiedHoursAgoFrom,
         int lastModifiedHoursAgoTo) {
         DateTime dateTime = new DateTime();

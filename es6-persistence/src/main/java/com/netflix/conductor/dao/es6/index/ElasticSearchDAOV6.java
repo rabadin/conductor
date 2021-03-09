@@ -760,6 +760,10 @@ public class ElasticSearchDAOV6 extends ElasticSearchBaseDAO implements IndexDAO
         return extractSearchIds(s);
     }
 
+    @Override
+    public void pruneWorkflowsAndTasks() {
+    }
+
     private UpdateRequest buildUpdateRequest(String id, byte[] doc, String indexName, String docType) {
         UpdateRequest req = new UpdateRequest(indexName, docType, id);
         req.doc(doc, XContentType.JSON);

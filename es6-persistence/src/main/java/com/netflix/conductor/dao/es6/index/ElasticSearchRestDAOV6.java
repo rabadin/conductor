@@ -910,6 +910,10 @@ public class ElasticSearchRestDAOV6 extends ElasticSearchBaseDAO implements Inde
         return workflowIds.getResults();
     }
 
+    @Override
+    public void pruneWorkflowsAndTasks() {
+    }
+
     private void indexObject(final String index, final String docType, final Object doc) {
         indexObject(index, docType, null, doc);
     }

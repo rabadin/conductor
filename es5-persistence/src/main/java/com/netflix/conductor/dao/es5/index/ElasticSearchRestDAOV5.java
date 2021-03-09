@@ -247,6 +247,13 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         } catch (IOException e) {
             logger.error("Failed to add {} mapping", TASK_DOC_TYPE);
         }
+
+        try {
+            Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this::pruneWorkflowsAndTasks, 0, 1, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            logger.error("Error during pruning of workflows and tasks in index", e);
+        }
+
     }
 
     /**
@@ -711,6 +718,15 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
      */
     private SearchResult<String> searchObjectIds(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType) throws IOException {
 
+        SearchResponse response = getSearchResponse(indexName, queryBuilder, start, size, sortOptions, docType);
+
+        List<String> result = new LinkedList<>();
+        response.getHits().forEach(hit -> result.add(hit.getId()));
+        long count = response.getHits().getTotalHits();
+        return new SearchResult<>(count, result);
+    }
+
+    private SearchResponse getSearchResponse(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType) throws IOException {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.from(start);
@@ -736,12 +752,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         searchRequest.source(searchSourceBuilder);
 
         //logger.error("grooming search request: {}",searchRequest.toString());
-        SearchResponse response = elasticSearchClient.search(searchRequest);
-
-        List<String> result = new LinkedList<>();
-        response.getHits().forEach(hit -> result.add(hit.getId()));
-        long count = response.getHits().getTotalHits();
-        return new SearchResult<>(count, result);
+        return elasticSearchClient.search(searchRequest);
     }
 
     @Override
@@ -784,6 +795,50 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         }
 
         return workflowIds.getResults();
+    }
+
+    @Override
+    public void pruneWorkflowsAndTasks() {
+        // Groom oldest archived workflows by batch size
+        QueryBuilder wfQuery = QueryBuilders.existsQuery("archived");
+        pruneDocs(indexName, wfQuery, WORKFLOW_DOC_TYPE, Collections.singletonList("endTime:ASC"));
+
+        // Groom obsolete tasks that are staying for more than a day
+        int daysToKeepTasks = 1;
+        DateTime dateTime = new DateTime();
+        QueryBuilder taskQuery = QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeepTasks));
+
+        pruneDocs(indexName, taskQuery, TASK_DOC_TYPE, Collections.singletonList("updateTime:ASC"));
+    }
+
+    private void pruneDocs(String indexName, QueryBuilder q, String docType, List<String> sortOptions) {
+        SearchResult<String> docIds;
+        long totalDocs = 0;
+        long prunedDocs = 0;
+        long searchTimeinMills = 0;
+        long pruneTimeinMills = 0;
+        try {
+            int batchSize = config.getElasticSearchGroomingBatchSize();
+            SearchResponse response = getSearchResponse(indexName, q, 0, batchSize, sortOptions, docType);
+            totalDocs = response.getHits().getTotalHits();
+            searchTimeinMills = response.getTookInMillis();
+
+            BulkRequest bulkRequest = new BulkRequest();
+            response.getHits().forEach(hit -> bulkRequest.add(new DeleteRequest(indexName, docType, hit.getId())));
+
+            try {
+                BulkResponse bulkResponse = elasticSearchClient.bulk(bulkRequest);
+                pruneTimeinMills = bulkResponse.getTookInMillis();
+                prunedDocs = bulkResponse.getItems().length;
+            } catch (Exception e) {
+                logger.error("Failed to prune {} from index", docType, e);
+            }
+
+        } catch (IOException e) {
+            logger.error("Unable to communicate with ES to groom {}", docType, e);
+        }
+
+        logger.info("ES pruning completed for '{}' on thread '{}': Total {}, Pruned {}, SearchTime {} ms, PruningTime {} ms", docType, Thread.currentThread().getName(), totalDocs, prunedDocs, searchTimeinMills, pruneTimeinMills);
     }
 
     private void indexObject(final String index, final String docType, final String docId, final Object doc) {
