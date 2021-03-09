@@ -249,7 +249,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         }
 
         try {
-            Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this::pruneWorkflowsAndTasks, 0, config.pruningIntervalInMinutes(), TimeUnit.MINUTES);
+            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(this::pruneWorkflowsAndTasks, 0, config.pruningIntervalInMinutes(), TimeUnit.MINUTES);
         } catch (Exception e) {
             logger.error("Error during pruning of workflows and tasks in index", e);
         }
