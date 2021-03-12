@@ -799,11 +799,11 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
 
     @Override
     public void pruneWorkflowsAndTasks() {
-        // Groom oldest archived workflows by batch size
+        // Prune oldest archived workflows by batch size
         QueryBuilder wfQuery = QueryBuilders.existsQuery("archived");
         pruneDocs(indexName, wfQuery, WORKFLOW_DOC_TYPE, Collections.singletonList("endTime:ASC"));
 
-        // Groom obsolete tasks that are staying for more than a day
+        // Prune obsolete tasks that are staying for more than a day
         int daysToKeepTasks = 1;
         DateTime dateTime = new DateTime();
         QueryBuilder taskQuery = QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeepTasks));
@@ -818,27 +818,31 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         long searchTimeinMills = 0;
         long pruneTimeinMills = 0;
         try {
-            int batchSize = config.getElasticSearchGroomingBatchSize();
+            int batchSize = config.getElasticSearchPruningBatchSize();
             SearchResponse response = getSearchResponse(indexName, q, 0, batchSize, sortOptions, docType);
             totalDocs = response.getHits().getTotalHits();
             searchTimeinMills = response.getTookInMillis();
 
-            BulkRequest bulkRequest = new BulkRequest();
-            response.getHits().forEach(hit -> bulkRequest.add(new DeleteRequest(indexName, docType, hit.getId())));
-
-            try {
-                BulkResponse bulkResponse = elasticSearchClient.bulk(bulkRequest);
-                pruneTimeinMills = bulkResponse.getTookInMillis();
-                prunedDocs = bulkResponse.getItems().length;
-            } catch (Exception e) {
-                logger.error("Failed to prune {} from index", docType, e);
+            if (totalDocs > 0) {
+                BulkRequest bulkRequest = new BulkRequest();
+                response.getHits().forEach(hit -> bulkRequest.add(new DeleteRequest(indexName, docType, hit.getId())));
+                try {
+                    BulkResponse bulkResponse = elasticSearchClient.bulk(bulkRequest);
+                    pruneTimeinMills = bulkResponse.getTookInMillis();
+                    prunedDocs = bulkResponse.getItems().length;
+                    logger.info("ES pruning completed for '{}': Total {}, Pruned {}, SearchTime {} ms, PruningTime {} ms", docType, totalDocs, prunedDocs, searchTimeinMills, pruneTimeinMills);
+                } catch (IOException e) {
+                    logger.error("Failed to prune '{}' from ES index - {}", docType, e.getMessage(), e);
+                } catch (Exception e) {
+                    logger.error("Failed to process bulk pruning response for '{}' from index - {}", docType, e.getMessage(), e);
+                }
             }
-
+            else {
+                logger.info("No ES records to prune for '{}'", docType, totalDocs);
+            }
         } catch (IOException e) {
-            logger.error("Unable to communicate with ES to groom {}", docType, e);
+            logger.error("Unable to communicate with ES to prune {}", docType, e);
         }
-
-        logger.info("ES pruning completed for '{}': Total {}, Pruned {}, SearchTime {} ms, PruningTime {} ms", docType, totalDocs, prunedDocs, searchTimeinMills, pruneTimeinMills);
     }
 
     private void indexObject(final String index, final String docType, final String docId, final Object doc) {

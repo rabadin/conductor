@@ -48,14 +48,6 @@ public class Main {
         embeddedElasticSearch.ifPresent(BootstrapUtil::startEmbeddedElasticsearchServer);
 
         BootstrapUtil.setupIndex(serverInjector.getInstance(IndexDAO.class));
-/*
-        try {
-            serverInjector.getInstance(IndexDAO.class).setup();
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-            System.exit(3);
-        }
-*/
 
         System.out.println("\n\n\n");
         System.out.println("                     _            _             ");
