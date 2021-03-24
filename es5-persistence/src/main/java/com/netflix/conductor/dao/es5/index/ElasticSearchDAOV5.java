@@ -750,7 +750,13 @@ public class ElasticSearchDAOV5 implements IndexDAO {
     }
 
     @Override
-    public void pruneWorkflowsAndTasks() {
+    public List<String> pruneWorkflows() {
+        throw new UnsupportedOperationException("This method is not currently implemented");
+    }
+
+    @Override
+    public void pruneTasks(List<String> taskIds) {
+        throw new UnsupportedOperationException("This method is not currently implemented");
     }
 
     @Override

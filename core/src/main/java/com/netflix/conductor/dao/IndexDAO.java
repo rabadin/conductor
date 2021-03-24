@@ -184,9 +184,16 @@ public interface IndexDAO {
     List<String> searchArchivableWorkflows(String indexName, long archiveTtlDays);
 
     /**
-     * Prune archived Workflows and Tasks by batch size
+     * Prune archived Workflows by batch size
+     * @return List of worlflow Ids that were pruned
      */
-    void pruneWorkflowsAndTasks();
+    List<String> pruneWorkflows();
+
+    /**
+     * Prune tasks given task Ids
+     * @param taskIds to be pruned
+    */
+    void pruneTasks(List<String> taskIds) ;
 
     /**
      * Search for RUNNING workflows changed in the last lastModifiedHoursAgoFrom to lastModifiedHoursAgoTo hours

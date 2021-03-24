@@ -145,8 +145,13 @@ public class NoopIndexDAO implements IndexDAO {
 	}
 
 	@Override
-	public void pruneWorkflowsAndTasks(){
-		return;
+	public List<String> pruneWorkflows() {
+		throw new UnsupportedOperationException("This method is not currently implemented");
+	}
+
+	@Override
+	public void pruneTasks(List<String> taskIds) {
+		throw new UnsupportedOperationException("This method is not currently implemented");
 	}
 
 	@Override

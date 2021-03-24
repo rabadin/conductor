@@ -761,7 +761,13 @@ public class ElasticSearchDAOV6 extends ElasticSearchBaseDAO implements IndexDAO
     }
 
     @Override
-    public void pruneWorkflowsAndTasks() {
+    public List<String> pruneWorkflows() {
+        throw new UnsupportedOperationException("This method is not currently implemented");
+    }
+
+    @Override
+    public void pruneTasks(List<String> taskIds) {
+        throw new UnsupportedOperationException("This method is not currently implemented");
     }
 
     private UpdateRequest buildUpdateRequest(String id, byte[] doc, String indexName, String docType) {

@@ -102,8 +102,8 @@ public interface Configuration {
     String INDEXING_ENABLED_PROPERTY_NAME = "workflow.indexing.enabled";
     boolean INDEXING_ENABLED_DEFAULT_VALUE = true;
 
-    String INDEX_PRUNING_INTERVAL_TIME_MINUTES_PROPERTY_NAME = "workflow.index.pruning.interval.time.minutes";
-    int INDEX_PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE = 60;
+    String PRUNING_INTERVAL_TIME_MINUTES_PROPERTY_NAME = "workflow.pruning.interval.time.minutes";
+    int PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE = 5;
 
     String TASK_DEF_REFRESH_TIME_SECS_PROPERTY_NAME = "conductor.taskdef.cache.refresh.time.seconds";
     int TASK_DEF_REFRESH_TIME_SECS_DEFAULT_VALUE = 60;
@@ -132,6 +132,9 @@ public interface Configuration {
     String ELASTIC_SEARCH_DOCUMENT_TYPE_OVERRIDE_DEFAULT_VALUE = "";
 
     String EVENT_QUEUE_POLL_SCHEDULER_THREAD_COUNT_PROPERTY_NAME = "workflow.event.queue.scheduler.poll.thread.count";
+
+    String PRUNING_BATCH_SIZE = "workflow.elasticsearch.pruning.batchSize";
+    int PRUNING_BATCH_SIZE_DEFAULT_VALUE = 10000;
 
     //TODO add constants for input/output external payload related properties.
 
@@ -177,10 +180,10 @@ public interface Configuration {
     }
 
     /**
-     * @return delay time in minutes to execute pruning schedule
+     * @return delay time in minutes to execute pruning(workflows & tasks) schedule
      */
     default int pruningIntervalInMinutes() {
-        return getIntProperty(INDEX_PRUNING_INTERVAL_TIME_MINUTES_PROPERTY_NAME, INDEX_PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE);
+        return getIntProperty(PRUNING_INTERVAL_TIME_MINUTES_PROPERTY_NAME, PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE);
     }
 
     /**
@@ -223,6 +226,14 @@ public interface Configuration {
      */
     default int getSystemTaskMaxPollCount() {
         return getIntProperty(SYSTEM_TASK_MAX_POLL_COUNT_PROPERTY_NAME, SYSTEM_TASK_MAX_POLL_COUNT_DEFAULT_VALUE);
+    }
+
+    /**
+     * @return the number of records (wprkflows or tasks) to prune
+     */
+    default int getPruningBatchSize()
+    {
+        return getIntProperty(PRUNING_BATCH_SIZE, PRUNING_BATCH_SIZE_DEFAULT_VALUE);
     }
 
     /**
