@@ -103,7 +103,7 @@ public interface Configuration {
     boolean INDEXING_ENABLED_DEFAULT_VALUE = true;
 
     String PRUNING_INTERVAL_TIME_MINUTES_PROPERTY_NAME = "workflow.pruning.interval.time.minutes";
-    int PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE = 5;
+    int PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE = 60;
 
     String TASK_DEF_REFRESH_TIME_SECS_PROPERTY_NAME = "conductor.taskdef.cache.refresh.time.seconds";
     int TASK_DEF_REFRESH_TIME_SECS_DEFAULT_VALUE = 60;
