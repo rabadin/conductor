@@ -261,19 +261,23 @@ public class ExecutionDAOFacade {
             if (workflowIds.size() > 0) {
                 for (String workflowId : workflowIds) {
                     try {
-                        // If the workflow was removed already, no pruning is necessary
-                        if (executionDAO.removeWorkflow(workflowId)) {
-                            workflowsRemoved++;
-                            Workflow workflow = getWorkflowById(workflowId, true);
+                        Workflow workflow = executionDAO.getWorkflow(workflowId, true);
+                        if (workflow != null) {
+                            int workflowTasks = 0;
                             for (Task task : workflow.getTasks()) {
                                 taskIds.add(task.getTaskId());
-                                tasksRemoved++;
+                                workflowTasks++;
+                            }
+                            // If the workflow was removed already, no pruning is necessary
+                            if (executionDAO.removeWorkflow(workflowId)) {
+                                workflowsRemoved++;
+                                // Count the tasks only if the parent workflow was successfully removed
+                                tasksRemoved += workflowTasks;
                             }
                         }
                     } catch (Exception ex) {
-                        LOGGER.error("Pruning failed while removing workflow '{}' in executionDAO", workflowId, ex);
+                        LOGGER.error("Pruning failed while removing workflow '{}' in executionDAO due to {}", workflowId, ex.getMessage());
                         Monitors.recordDaoError("executionDao", "removeWorkflow");
-                        throw ex;
                     }
                     if (workflowsRemoved > 0) {
                         LOGGER.info("Pruning of {} workflows and {} tasks completed in executionDAO", workflowsRemoved, tasksRemoved);
