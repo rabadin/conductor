@@ -849,7 +849,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
                 logger.info("No ES records to prune for '{}'", docType);
             }
         } catch (IOException e) {
-            logger.error("Unable to communicate with ES to prune {}", docType, e);
+            logger.error("Unable to communicate with ES to prune '{}' due to {}", docType, e.getMessage());
         }
 
         return docIds;
@@ -864,9 +864,9 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
             prunedDocs = bulkResponse.getItems().length;
             logger.info("ES pruning completed for '{}': Total {}, Pruned {}, SearchTime {} ms, PruningTime {} ms", docType, totalDocs, prunedDocs, searchTimeinMills, pruneTimeinMills);
         } catch (IOException e) {
-            logger.error("Failed to prune '{}' from ES index - {}", docType, e.getMessage(), e);
+            logger.error("Failed to prune '{}' from ES index due to {}", docType, e.getMessage());
         } catch (Exception e) {
-            logger.error("Failed to process bulk pruning response for '{}' from index - {}", docType, e.getMessage(), e);
+            logger.error("Failed to process bulk pruning response for '{}' from index due to {}", docType, e.getMessage());
         }
     }
         private void indexObject(final String index, final String docType, final String docId, final Object doc) {
