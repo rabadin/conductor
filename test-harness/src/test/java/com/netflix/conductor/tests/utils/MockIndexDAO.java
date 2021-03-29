@@ -155,7 +155,7 @@ public class MockIndexDAO implements IndexDAO {
 	}
 
 	@Override
-	public void groomWorkflowsAndTasks(List<String> taskIds) {
+	public void pruneTasks(List<String> taskIds) {
 		throw new UnsupportedOperationException("This method is not currently implemented");
 	}
 }

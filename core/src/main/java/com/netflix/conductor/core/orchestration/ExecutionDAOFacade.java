@@ -301,7 +301,6 @@ public class ExecutionDAOFacade {
     public void removeWorkflow(String workflowId, boolean archiveWorkflow) {
         try {
             Workflow workflow = getWorkflowById(workflowId, true);
-
             removeWorkflowIndex(workflow, archiveWorkflow);
             // remove workflow from DAO
             try {
@@ -313,6 +312,7 @@ public class ExecutionDAOFacade {
         } catch (ApplicationException ae) {
             throw ae;
         } catch (Exception e) {
+            LOGGER.info("Error removing workflow: {}", workflowId);
             throw new ApplicationException(ApplicationException.Code.BACKEND_ERROR, "Error removing workflow: " + workflowId, e);
         }
     }
