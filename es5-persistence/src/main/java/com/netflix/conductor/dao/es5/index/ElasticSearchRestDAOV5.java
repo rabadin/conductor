@@ -720,10 +720,15 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
     }
 
     private SearchResponse getSearchResponse(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType) throws IOException {
+        return getSearchResponse(indexName, queryBuilder, start, size, sortOptions, docType, true);
+    }
+
+    private SearchResponse getSearchResponse(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType, boolean includeDocs) throws IOException {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.from(start);
         searchSourceBuilder.size(size);
+        searchSourceBuilder.fetchSource(includeDocs);
 
         if (sortOptions != null && !sortOptions.isEmpty()) {
 
@@ -833,7 +838,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         long searchTimeinMills = 0;
         try {
             int batchSize = config.getPruningBatchSize();
-            SearchResponse response = getSearchResponse(indexName, q, 0, batchSize, sortOptions, docType);
+            SearchResponse response = getSearchResponse(indexName, q, 0, batchSize, sortOptions, docType, false);
             totalDocs = response.getHits().getTotalHits();
             searchTimeinMills = response.getTookInMillis();
 
