@@ -183,7 +183,7 @@ public interface Configuration {
      * @return delay time in minutes to execute pruning(workflows & tasks) schedule
      */
     default int pruningIntervalInMinutes() {
-        return getIntProperty(PRUNING_INTERVAL_TIME_MINUTES_PROPERTY_NAME, PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE);
+        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_INTERVAL_TIME_MINUTES", "60"));
     }
 
     /**
@@ -233,7 +233,7 @@ public interface Configuration {
      */
     default int getPruningBatchSize()
     {
-        return getIntProperty(PRUNING_BATCH_SIZE, PRUNING_BATCH_SIZE_DEFAULT_VALUE);
+        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_BATCH_SIZE", "2000"));
     }
 
     /**
