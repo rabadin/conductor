@@ -279,9 +279,9 @@ public class ExecutionDAOFacade {
                         LOGGER.error("Pruning failed while removing workflow '{}' in executionDAO due to {}", workflowId, ex.getMessage());
                         Monitors.recordDaoError("executionDao", "removeWorkflow");
                     }
-                    if (workflowsRemoved > 0) {
-                        LOGGER.info("Pruning of {} workflows and {} tasks completed in executionDAO", workflowsRemoved, tasksRemoved);
-                    }
+                }
+                if (workflowsRemoved > 0) {
+                    LOGGER.info("Pruning of {} workflows and {} tasks completed in executionDAO", workflowsRemoved, tasksRemoved);
                 }
             }
             // Prune all tasks belonged to pruned workflows and other leftover tasks
