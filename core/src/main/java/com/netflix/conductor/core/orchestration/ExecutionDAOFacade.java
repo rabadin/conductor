@@ -35,9 +35,11 @@ import com.netflix.conductor.dao.RateLimitingDAO;
 import com.netflix.conductor.metrics.Monitors;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -83,6 +85,12 @@ public class ExecutionDAOFacade {
             LOGGER.warn("Request {} to delay updating index dropped in executor {}", runnable, executor);
             Monitors.recordDiscardedIndexingCount("delayQueue");
         });
+
+        try {
+            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(this::pruneWorkflowsAndTasks, 0, config.pruningIntervalInMinutes(), TimeUnit.MINUTES);
+        } catch (Exception e) {
+            LOGGER.error("Error during pruning of workflows and tasks", e);
+        }
         this.scheduledThreadPoolExecutor.setRemoveOnCancelPolicy(true);
     }
 
@@ -243,16 +251,56 @@ public class ExecutionDAOFacade {
         executionDAO.removeFromPendingWorkflow(workflowType, workflowId);
     }
 
-    /**
-     * Removes the workflow from the data store.
-     *
-     * @param workflowId      the id of the workflow to be removed
-     * @param archiveWorkflow if true, the workflow will be archived in the {@link IndexDAO} after removal from  {@link ExecutionDAO}
-     */
+    public void pruneWorkflowsAndTasks() {
+        try {
+            // Prune all workflows that are archived
+            List<String> workflowIds = indexDAO.pruneWorkflows();
+            List<String> taskIds = new ArrayList<String>();
+            int workflowsRemoved = 0;
+            int tasksRemoved = 0;
+            if (workflowIds.size() > 0) {
+                for (String workflowId : workflowIds) {
+                    try {
+                        Workflow workflow = executionDAO.getWorkflow(workflowId, true);
+                        if (workflow != null) {
+                            int workflowTasks = 0;
+                            for (Task task : workflow.getTasks()) {
+                                taskIds.add(task.getTaskId());
+                                workflowTasks++;
+                            }
+                            // If the workflow was removed already, no pruning is necessary
+                            if (executionDAO.removeWorkflow(workflowId)) {
+                                workflowsRemoved++;
+                                // Count the tasks only if the parent workflow was successfully removed
+                                tasksRemoved += workflowTasks;
+                            }
+                        }
+                    } catch (Exception ex) {
+                        LOGGER.error("Pruning failed while removing workflow '{}' in executionDAO due to {}", workflowId, ex.getMessage());
+                        Monitors.recordDaoError("executionDao", "removeWorkflow");
+                    }
+                }
+                if (workflowsRemoved > 0) {
+                    LOGGER.info("Pruning of {} workflows and {} tasks completed in executionDAO", workflowsRemoved, tasksRemoved);
+                }
+            }
+            // Prune all tasks belonged to pruned workflows and other leftover tasks
+            indexDAO.pruneTasks(taskIds);
+
+        } catch (Exception e) {
+            LOGGER.error("Pruning failed", e);
+        }
+    }
+
+        /**
+         * Removes the workflow from the data store.
+         *
+         * @param workflowId      the id of the workflow to be removed
+         * @param archiveWorkflow if true, the workflow will be archived in the {@link IndexDAO} after removal from  {@link ExecutionDAO}
+         */
     public void removeWorkflow(String workflowId, boolean archiveWorkflow) {
         try {
             Workflow workflow = getWorkflowById(workflowId, true);
-
             removeWorkflowIndex(workflow, archiveWorkflow);
             // remove workflow from DAO
             try {
@@ -264,6 +312,7 @@ public class ExecutionDAOFacade {
         } catch (ApplicationException ae) {
             throw ae;
         } catch (Exception e) {
+            LOGGER.info("Error removing workflow: {}", workflowId);
             throw new ApplicationException(ApplicationException.Code.BACKEND_ERROR, "Error removing workflow: " + workflowId, e);
         }
     }
