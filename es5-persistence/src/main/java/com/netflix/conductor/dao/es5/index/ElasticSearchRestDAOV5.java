@@ -711,16 +711,12 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
      */
     private SearchResult<String> searchObjectIds(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType) throws IOException {
 
-        SearchResponse response = getSearchResponse(indexName, queryBuilder, start, size, sortOptions, docType);
+        SearchResponse response = getSearchResponse(indexName, queryBuilder, start, size, sortOptions, docType, true);
 
         List<String> result = new LinkedList<>();
         response.getHits().forEach(hit -> result.add(hit.getId()));
         long count = response.getHits().getTotalHits();
         return new SearchResult<>(count, result);
-    }
-
-    private SearchResponse getSearchResponse(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType) throws IOException {
-        return getSearchResponse(indexName, queryBuilder, start, size, sortOptions, docType, true);
     }
 
     private SearchResponse getSearchResponse(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType, boolean includeDocs) throws IOException {
@@ -749,7 +745,6 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         searchRequest.types(docType);
         searchRequest.source(searchSourceBuilder);
 
-        //logger.error("grooming search request: {}",searchRequest.toString());
         return elasticSearchClient.search(searchRequest);
     }
 
@@ -810,12 +805,6 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
             }
             pruneBulkRecords(bulkRequest, docType, taskIds.size(), 0);
         }
-
-        // Prune obsolete tasks that are staying for more than a day
-        int daysToKeepTasks = 1;
-        DateTime dateTime = new DateTime();
-        QueryBuilder taskQuery = QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeepTasks));
-        pruneDocs(indexName, taskQuery, docType, Collections.singletonList("updateTime:ASC"));
     }
 
     /**
@@ -824,8 +813,13 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
      */
     @Override
     public List<String> pruneWorkflows() {
-        // Prune oldest archived workflows by batch size
-        QueryBuilder wfQuery = QueryBuilders.existsQuery("archived");
+        // Prune oldest archived workflows older than 7 days by batch size
+        int daysToKeep = 7;
+        DateTime dateTime = new DateTime();
+        QueryBuilder wfQuery = QueryBuilders.boolQuery()
+                                            .must(QueryBuilders.existsQuery("archived"))
+                                            .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeep)));
+
         List<String> workflowIds = pruneDocs(indexName, wfQuery, WORKFLOW_DOC_TYPE, Collections.singletonList("endTime:ASC"));
 
         return workflowIds;
