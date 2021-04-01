@@ -263,6 +263,8 @@ public class ExecutionDAOFacade {
                     try {
                         Workflow workflow = executionDAO.getWorkflow(workflowId, true);
                         if (workflow != null) {
+                            LOGGER.info("Stale workflow '{}' found in executionDAO during pruning", tasksRemoved);
+
                             int workflowTasks = 0;
                             for (Task task : workflow.getTasks()) {
                                 taskIds.add(task.getTaskId());

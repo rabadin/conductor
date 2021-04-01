@@ -134,7 +134,7 @@ public interface Configuration {
     String EVENT_QUEUE_POLL_SCHEDULER_THREAD_COUNT_PROPERTY_NAME = "workflow.event.queue.scheduler.poll.thread.count";
 
     String PRUNING_BATCH_SIZE = "workflow.elasticsearch.pruning.batchSize";
-    int PRUNING_BATCH_SIZE_DEFAULT_VALUE = 10000;
+    int PRUNING_BATCH_SIZE_DEFAULT_VALUE = 2000;
 
     //TODO add constants for input/output external payload related properties.
 
@@ -183,7 +183,7 @@ public interface Configuration {
      * @return delay time in minutes to execute pruning(workflows & tasks) schedule
      */
     default int pruningIntervalInMinutes() {
-        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_INTERVAL_TIME_MINUTES", "60"));
+        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_INTERVAL_TIME_MINUTES", Integer.toString(PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE)));
     }
 
     /**
@@ -233,7 +233,7 @@ public interface Configuration {
      */
     default int getPruningBatchSize()
     {
-        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_BATCH_SIZE", "2000"));
+        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_BATCH_SIZE", Integer.toString(PRUNING_BATCH_SIZE_DEFAULT_VALUE)));
     }
 
     /**

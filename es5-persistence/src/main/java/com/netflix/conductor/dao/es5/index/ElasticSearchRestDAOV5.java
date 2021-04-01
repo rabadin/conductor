@@ -810,12 +810,6 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
             }
             pruneBulkRecords(bulkRequest, docType, taskIds.size(), 0);
         }
-
-        // Prune obsolete tasks that are staying for more than a day
-        int daysToKeepTasks = 1;
-        DateTime dateTime = new DateTime();
-        QueryBuilder taskQuery = QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeepTasks));
-        pruneDocs(indexName, taskQuery, docType, Collections.singletonList("updateTime:ASC"));
     }
 
     /**
@@ -824,8 +818,13 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
      */
     @Override
     public List<String> pruneWorkflows() {
-        // Prune oldest archived workflows by batch size
-        QueryBuilder wfQuery = QueryBuilders.existsQuery("archived");
+        // Prune oldest archived workflows older than 7 days by batch size
+        int daysToKeep = 7;
+        DateTime dateTime = new DateTime();
+        QueryBuilder wfQuery = QueryBuilders.boolQuery()
+                                            .must(QueryBuilders.existsQuery("archived"))
+                                            .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeep)));
+
         List<String> workflowIds = pruneDocs(indexName, wfQuery, WORKFLOW_DOC_TYPE, Collections.singletonList("endTime:ASC"));
 
         return workflowIds;
