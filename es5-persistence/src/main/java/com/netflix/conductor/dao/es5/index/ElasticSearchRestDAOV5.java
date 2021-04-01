@@ -711,16 +711,12 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
      */
     private SearchResult<String> searchObjectIds(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType) throws IOException {
 
-        SearchResponse response = getSearchResponse(indexName, queryBuilder, start, size, sortOptions, docType);
+        SearchResponse response = getSearchResponse(indexName, queryBuilder, start, size, sortOptions, docType, true);
 
         List<String> result = new LinkedList<>();
         response.getHits().forEach(hit -> result.add(hit.getId()));
         long count = response.getHits().getTotalHits();
         return new SearchResult<>(count, result);
-    }
-
-    private SearchResponse getSearchResponse(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType) throws IOException {
-        return getSearchResponse(indexName, queryBuilder, start, size, sortOptions, docType, true);
     }
 
     private SearchResponse getSearchResponse(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType, boolean includeDocs) throws IOException {
@@ -749,7 +745,6 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         searchRequest.types(docType);
         searchRequest.source(searchSourceBuilder);
 
-        //logger.error("grooming search request: {}",searchRequest.toString());
         return elasticSearchClient.search(searchRequest);
     }
 
