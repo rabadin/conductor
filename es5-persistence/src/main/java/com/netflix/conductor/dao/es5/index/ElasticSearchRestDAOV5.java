@@ -723,7 +723,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.from(start);
-        searchSourceBuilder.size(size);
+        if (size > 0) searchSourceBuilder.size(size);
         searchSourceBuilder.fetchSource(includeDocs);
 
         if (sortOptions != null && !sortOptions.isEmpty()) {
@@ -805,6 +805,19 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
             }
             pruneBulkRecords(bulkRequest, docType, taskIds.size(), 0);
         }
+
+        //Prune all tasks older than 14 days (or) all completed tasks no matter what
+        int daysToKeep = config.getPruningDaysToKeep();
+        int batchSize = config.getPruningBatchSize();
+        DateTime dateTime = new DateTime();
+        QueryBuilder taskQuery = QueryBuilders.boolQuery()
+                                    .must(QueryBuilders.termQuery("status", "COMPLETED"))
+                                    .mustNot(QueryBuilders.boolQuery()
+                                            .mustNot(QueryBuilders.termQuery("status", "COMPLETED"))
+                                            .must(QueryBuilders.rangeQuery("updateTime").gt(dateTime.minusDays(daysToKeep)))
+                                    );
+
+        pruneDocs(indexName, taskQuery, TASK_DOC_TYPE, batchSize, Collections.singletonList("endTime:ASC"));
     }
 
     /**
@@ -814,24 +827,38 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
     @Override
     public List<String> pruneWorkflows() {
         // Prune oldest archived workflows older than 7 days by batch size
-        int daysToKeep = 7;
+        int daysToKeep = config.getPruningDaysToKeep();
         DateTime dateTime = new DateTime();
+        //Prune all workflows older than 14 days (or) all archived & completed workflows no matter what
         QueryBuilder wfQuery = QueryBuilders.boolQuery()
                                             .must(QueryBuilders.existsQuery("archived"))
-                                            .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeep)));
+                                            .must(QueryBuilders.termQuery("status", "COMPLETED"))
+                                            .mustNot(QueryBuilders.boolQuery()
+                                                    .mustNot(QueryBuilders.termQuery("status", "COMPLETED"))
+                                                    .must(QueryBuilders.rangeQuery("updateTime").gt(dateTime.minusDays(daysToKeep)))
+                                                    );
 
-        List<String> workflowIds = pruneDocs(indexName, wfQuery, WORKFLOW_DOC_TYPE, Collections.singletonList("endTime:ASC"));
+        int batchSize = config.getPruningBatchSize();
+        List<String> workflowIds = pruneDocs(indexName, wfQuery, WORKFLOW_DOC_TYPE, batchSize, Collections.singletonList("endTime:ASC"));
+
+        // If needed, this can be made optional by passing it as argument
+        boolean includeTasks = true;
+        if (includeTasks){
+            //Delete tasks that belonged to the pruned workflows
+            QueryBuilder taskQuery = QueryBuilders.boolQuery()
+                                                  .must(QueryBuilders.termsQuery("workflowId", workflowIds));
+            pruneDocs(indexName, taskQuery, TASK_DOC_TYPE, -1, null);
+        }
 
         return workflowIds;
     }
 
-    private List<String> pruneDocs(String indexName, QueryBuilder q, String docType, List<String> sortOptions) {
+    private List<String> pruneDocs(String indexName, QueryBuilder q, String docType, int batchSize, List<String> sortOptions) {
         //SearchResult<String> docIds;
         List<String> docIds = new LinkedList<>();
         long totalDocs = 0;
         long searchTimeinMills = 0;
         try {
-            int batchSize = config.getPruningBatchSize();
             SearchResponse response = getSearchResponse(indexName, q, 0, batchSize, sortOptions, docType, false);
             totalDocs = response.getHits().getTotalHits();
             searchTimeinMills = response.getTookInMillis();

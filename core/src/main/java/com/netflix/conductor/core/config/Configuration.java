@@ -135,6 +135,7 @@ public interface Configuration {
 
     String PRUNING_BATCH_SIZE = "workflow.elasticsearch.pruning.batchSize";
     int PRUNING_BATCH_SIZE_DEFAULT_VALUE = 2000;
+    int PRUNING_DAYS_TO_KEEP_DEFAULT_VALUE = 14;
 
     //TODO add constants for input/output external payload related properties.
 
@@ -234,6 +235,14 @@ public interface Configuration {
     default int getPruningBatchSize()
     {
         return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_BATCH_SIZE", Integer.toString(PRUNING_BATCH_SIZE_DEFAULT_VALUE)));
+    }
+
+    /**
+     * @return number of days to keep workflows that are not 'Completed'
+     */
+    default int getPruningDaysToKeep()
+    {
+        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_DAYS_TO_KEEP", Integer.toString(PRUNING_DAYS_TO_KEEP_DEFAULT_VALUE)));
     }
 
     /**
