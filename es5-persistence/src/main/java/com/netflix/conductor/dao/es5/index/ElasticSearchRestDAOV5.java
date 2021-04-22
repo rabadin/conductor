@@ -841,7 +841,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
                                         .should(QueryBuilders.termQuery("status", "COMPLETED"))
                                         .should(QueryBuilders.termQuery("status", "TIMED_OUT"))
                                         .should(QueryBuilders.termQuery("status", "TERMINATED"))
-                                        .must(QueryBuilders.rangeQuery("updateTime").gt(dateTime.minusDays(daysForDebug)))
+                                        .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysForDebug)))
                                     )
                                     .should(QueryBuilders.boolQuery()
                                         .must(QueryBuilders.termQuery("status", "FAILED"))
