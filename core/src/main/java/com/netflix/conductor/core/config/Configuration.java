@@ -135,7 +135,7 @@ public interface Configuration {
 
     String PRUNING_BATCH_SIZE = "workflow.elasticsearch.pruning.batchSize";
     int PRUNING_BATCH_SIZE_DEFAULT_VALUE = 2000;
-    int PRUNING_DAYS_TO_KEEP_DEFAULT_VALUE = 14;
+    int PRUNING_DAYS_TO_KEEP_DEFAULT_VALUE = 28;   // 4 weeks
 
     //TODO add constants for input/output external payload related properties.
 

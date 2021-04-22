@@ -807,17 +807,21 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         }
 
         //Prune all tasks older than 14 days (or) all completed tasks no matter what
+ /*
         int daysToKeep = config.getPruningDaysToKeep();
         int batchSize = config.getPruningBatchSize();
         DateTime dateTime = new DateTime();
         QueryBuilder taskQuery = QueryBuilders.boolQuery()
-                                    .must(QueryBuilders.termQuery("status", "COMPLETED"))
-                                    .mustNot(QueryBuilders.boolQuery()
-                                            .mustNot(QueryBuilders.termQuery("status", "COMPLETED"))
+                                    .must(QueryBuilders.boolQuery()
+                                            .should(QueryBuilders.termQuery("status", "COMPLETED"))
                                             .must(QueryBuilders.rangeQuery("updateTime").gt(dateTime.minusDays(daysToKeep)))
+                                    .must(QueryBuilders.boolQuery()
+                                            .must(QueryBuilders.termQuery("status", "FAILED"))
+                                            .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeep)))
                                     );
 
         pruneDocs(indexName, taskQuery, TASK_DOC_TYPE, batchSize, Collections.singletonList("endTime:ASC"));
+  */
     }
 
     /**
@@ -830,13 +834,23 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         int daysToKeep = config.getPruningDaysToKeep();
         DateTime dateTime = new DateTime();
         //Prune all workflows older than 14 days (or) all archived & completed workflows no matter what
+        int daysForDebug = 14;
+        int daysWaitingAllowed = 180;
         QueryBuilder wfQuery = QueryBuilders.boolQuery()
-                                            .must(QueryBuilders.existsQuery("archived"))
-                                            .must(QueryBuilders.termQuery("status", "COMPLETED"))
-                                            .mustNot(QueryBuilders.boolQuery()
-                                                    .mustNot(QueryBuilders.termQuery("status", "COMPLETED"))
-                                                    .must(QueryBuilders.rangeQuery("updateTime").gt(dateTime.minusDays(daysToKeep)))
-                                                    );
+                                    .should(QueryBuilders.boolQuery()
+                                        .should(QueryBuilders.termQuery("status", "COMPLETED"))
+                                        .should(QueryBuilders.termQuery("status", "TIMED_OUT"))
+                                        .should(QueryBuilders.termQuery("status", "TERMINATED"))
+                                        .must(QueryBuilders.rangeQuery("updateTime").gt(dateTime.minusDays(daysForDebug)))
+                                    )
+                                    .should(QueryBuilders.boolQuery()
+                                        .must(QueryBuilders.termQuery("status", "FAILED"))
+                                        .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeep)))
+                                    )
+                                    .should(QueryBuilders.boolQuery()
+                                        .must(QueryBuilders.termQuery("status", "RUNNING"))
+                                        .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysWaitingAllowed)))
+                                    );
 
         int batchSize = config.getPruningBatchSize();
         List<String> workflowIds = pruneDocs(indexName, wfQuery, WORKFLOW_DOC_TYPE, batchSize, Collections.singletonList("endTime:ASC"));
