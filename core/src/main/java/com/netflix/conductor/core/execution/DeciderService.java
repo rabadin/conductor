@@ -72,7 +72,9 @@ public class DeciderService {
 
     private final Map<String, TaskMapper> taskMappers;
 
-    private final Predicate<Task> isNonPendingTask = task -> !task.isRetried() && !task.getStatus().equals(SKIPPED) && !task.isExecuted();
+    // Took changes from https://github.com/Netflix/conductor/pull/1664
+    private final Predicate<Task> isNonPendingTask = task -> (!task.isRetried() && !task.getStatus().equals(SKIPPED) && !task.isExecuted()) ||
+            (task.getWorkflowTask() != null && task.getWorkflowTask().getType().equals(TaskType.DECISION.name()));
 
     private static final String PENDING_TASK_TIME_THRESHOLD_PROPERTY_NAME = "workflow.task.pending.time.threshold.minutes";
 
@@ -111,7 +113,7 @@ public class DeciderService {
     }
 
     private DeciderOutcome decide(final Workflow workflow, List<Task> preScheduledTasks) throws TerminateWorkflowException {
-
+        LOGGER.info("### 000 preScheduledTasks {} wfid {}", preScheduledTasks, workflow.getWorkflowId());
         DeciderOutcome outcome = new DeciderOutcome();
 
         if (workflow.getStatus().isTerminal()) {
@@ -134,6 +136,7 @@ public class DeciderService {
                 .stream()
                 .filter(isNonPendingTask)
                 .collect(Collectors.toList());
+        LOGGER.info("### 111 pendingTasks {} wfid {}", pendingTasks, workflow.getWorkflowId());
 
         // Get all the tasks that have not completed their lifecycle yet
         // This list will be empty for a new workflow
@@ -143,22 +146,28 @@ public class DeciderService {
                 .map(Task::getReferenceTaskName)
                 .collect(Collectors.toSet());
 
+        LOGGER.info("### 222 executedTaskRefNames {} wfid {}", executedTaskRefNames, workflow.getWorkflowId());
+
         Map<String, Task> tasksToBeScheduled = new LinkedHashMap<>();
 
         preScheduledTasks.forEach(preScheduledTask -> {
             tasksToBeScheduled.put(preScheduledTask.getReferenceTaskName(), preScheduledTask);
         });
 
+        LOGGER.info("### 333 tasksToBeScheduled {} wfid {}", tasksToBeScheduled, workflow.getWorkflowId());
+
         // A new workflow does not enter this code branch
         for (Task pendingTask : pendingTasks) {
 
             if (SystemTaskType.is(pendingTask.getTaskType()) && !pendingTask.getStatus().isTerminal()) {
+                LOGGER.info("### 444 pendingTask {} wfid {}", pendingTask, workflow.getWorkflowId());
                 tasksToBeScheduled.putIfAbsent(pendingTask.getReferenceTaskName(), pendingTask);
                 executedTaskRefNames.remove(pendingTask.getReferenceTaskName());
             }
 
             Optional<TaskDef> taskDefinition = pendingTask.getTaskDefinition();
             if (!taskDefinition.isPresent()) {
+                LOGGER.info("### 555 pendingTask {} wfid {}", pendingTask, workflow.getWorkflowId());
                taskDefinition = Optional.ofNullable(workflow.getWorkflowDefinition().getTaskByRefName(pendingTask.getReferenceTaskName()))
                        .map(WorkflowTask::getTaskDefinition);
             }
@@ -172,28 +181,41 @@ public class DeciderService {
                 }
             }
 
+            // Took changes from https://github.com/Netflix/conductor/pull/1664
+            WorkflowTask workflowTask = pendingTask.getWorkflowTask();
+            if (workflowTask == null) {
+                workflowTask = workflow.getWorkflowDefinition().getTaskByRefName(pendingTask.getReferenceTaskName());
+            }
+
+            if (workflowTask.getType().equals(TaskType.DECISION.name()) && pendingTask.getStatus() == Status.COMPLETED) {
+                getTasksToBeScheduled(workflow, pendingTask.getWorkflowTask(), 0).forEach(nextTask -> {
+                    tasksToBeScheduled.putIfAbsent(nextTask.getReferenceTaskName(), nextTask);
+                });
+            }
+
             if (!pendingTask.getStatus().isSuccessful()) {
-                WorkflowTask workflowTask = pendingTask.getWorkflowTask();
-                if (workflowTask == null) {
-                    workflowTask = workflow.getWorkflowDefinition().getTaskByRefName(pendingTask.getReferenceTaskName());
-                }
 
                 Optional<Task> retryTask = retry(taskDefinition.orElse(null), workflowTask, pendingTask, workflow);
                 if (retryTask.isPresent()) {
+                    LOGGER.info("### 888 retryTask {} wfid {}", retryTask, workflow.getWorkflowId());
                     tasksToBeScheduled.put(retryTask.get().getReferenceTaskName(), retryTask.get());
                     executedTaskRefNames.remove(retryTask.get().getReferenceTaskName());
                     outcome.tasksToBeUpdated.add(pendingTask);
                 } else {
+                    LOGGER.info("### 999 retryTask {} wfid {}", retryTask, workflow.getWorkflowId());
                     pendingTask.setStatus(COMPLETED_WITH_ERRORS);
                 }
             }
 
             if (!pendingTask.isExecuted() && !pendingTask.isRetried() && pendingTask.getStatus().isTerminal()) {
                 pendingTask.setExecuted(true);
+                LOGGER.info("### AAA pendingTask {} wfid {}", pendingTask, workflow.getWorkflowId());
                 List<Task> nextTasks = getNextTask(workflow, pendingTask);
                 if (pendingTask.isLoopOverTask() && !TaskType.DO_WHILE.name().equals(pendingTask.getTaskType()) && !nextTasks.isEmpty()) {
                     nextTasks = filterNextLoopOverTasks(nextTasks, pendingTask, workflow);
+                    LOGGER.info("### BBB nextTasks {} wfid {}", nextTasks, workflow.getWorkflowId());
                 }
+                LOGGER.info("### CCC nextTasks {} wfid {}", nextTasks, workflow.getWorkflowId());
                 nextTasks.forEach(nextTask -> tasksToBeScheduled.putIfAbsent(nextTask.getReferenceTaskName(), nextTask));
                 outcome.tasksToBeUpdated.add(pendingTask);
                 LOGGER.debug("Scheduling Tasks from {}, next = {} for workflowId: {}", pendingTask.getTaskDefName(),
@@ -208,6 +230,7 @@ public class DeciderService {
         List<Task> unScheduledTasks = tasksToBeScheduled.values().stream()
                 .filter(task -> !executedTaskRefNames.contains(task.getReferenceTaskName()))
                 .collect(Collectors.toList());
+        LOGGER.info("### DDD unScheduledTasks {} wfid {}", unScheduledTasks, workflow.getWorkflowId());
         if (!unScheduledTasks.isEmpty()) {
             LOGGER.debug("Scheduling Tasks: {} for workflow: {}", unScheduledTasks.stream()
                             .map(Task::getTaskDefName)
@@ -315,29 +338,37 @@ public class DeciderService {
 
     private boolean checkForWorkflowCompletion(final Workflow workflow) throws TerminateWorkflowException {
         List<Task> allTasks = workflow.getTasks();
+        LOGGER.info("RRR 111 allTasks {} wfid {}", allTasks, workflow.getWorkflowId());
         if (allTasks.isEmpty()) {
+            LOGGER.info("RRR 222 allTasks {} wfid {}", allTasks, workflow.getWorkflowId());
             return false;
         }
 
         Map<String, Status> taskStatusMap = new HashMap<>();
         workflow.getTasks().forEach(task -> taskStatusMap.put(task.getReferenceTaskName(), task.getStatus()));
+        LOGGER.info("RRR 333 taskStatusMap {} wfid {}", taskStatusMap, workflow.getWorkflowId());
 
         List<WorkflowTask> workflowTasks = workflow.getWorkflowDefinition().getTasks();
+        LOGGER.info("RRR 444 workflowTasks {} wfid {}", workflowTasks, workflow.getWorkflowId());
+
         boolean allCompletedSuccessfully = workflowTasks.stream()
                 .parallel()
                 .allMatch(wftask -> {
                     Status status = taskStatusMap.get(wftask.getTaskReferenceName());
+                    LOGGER.info("RRR 555 status {} wfid {}", status, workflow.getWorkflowId());
                     return status != null && status.isSuccessful() && status.isTerminal();
                 });
 
         boolean noPendingTasks = taskStatusMap.values()
                 .stream()
                 .allMatch(Status::isTerminal);
+        LOGGER.info("RRR 666 noPendingTasks {} wfid {}", noPendingTasks, workflow.getWorkflowId());
 
         boolean noPendingSchedule = workflow.getTasks().stream()
                 .parallel()
                 .noneMatch(wftask -> {
                     String next = getNextTasksToBeScheduled(workflow, wftask);
+                    LOGGER.info("RRR 666 next {} wfid {}", next, workflow.getWorkflowId());
                     return next != null && !taskStatusMap.containsKey(next);
                 });
 
@@ -350,6 +381,7 @@ public class DeciderService {
         // Get the following task after the last completed task
         if (SystemTaskType.is(task.getTaskType()) && SystemTaskType.DECISION.name().equals(task.getTaskType())) {
             if (task.getInputData().get("hasChildren") != null) {
+                LOGGER.info("XXXXXXX task {}, workflow {}", task, workflow);
                 return Collections.emptyList();
             }
         }
