@@ -324,37 +324,30 @@ public class DeciderService {
 
     private boolean checkForWorkflowCompletion(final Workflow workflow) throws TerminateWorkflowException {
         List<Task> allTasks = workflow.getTasks();
-        LOGGER.info("RRR 111 allTasks {} wfid {}", allTasks, workflow.getWorkflowId());
         if (allTasks.isEmpty()) {
-            LOGGER.info("RRR 222 allTasks {} wfid {}", allTasks, workflow.getWorkflowId());
             return false;
         }
 
         Map<String, Status> taskStatusMap = new HashMap<>();
         workflow.getTasks().forEach(task -> taskStatusMap.put(task.getReferenceTaskName(), task.getStatus()));
-        LOGGER.info("RRR 333 taskStatusMap {} wfid {}", taskStatusMap, workflow.getWorkflowId());
 
         List<WorkflowTask> workflowTasks = workflow.getWorkflowDefinition().getTasks();
-        LOGGER.info("RRR 444 workflowTasks {} wfid {}", workflowTasks, workflow.getWorkflowId());
 
         boolean allCompletedSuccessfully = workflowTasks.stream()
                 .parallel()
                 .allMatch(wftask -> {
                     Status status = taskStatusMap.get(wftask.getTaskReferenceName());
-                    LOGGER.info("RRR 555 status {} wfid {}", status, workflow.getWorkflowId());
                     return status != null && status.isSuccessful() && status.isTerminal();
                 });
 
         boolean noPendingTasks = taskStatusMap.values()
                 .stream()
                 .allMatch(Status::isTerminal);
-        LOGGER.info("RRR 666 noPendingTasks {} wfid {}", noPendingTasks, workflow.getWorkflowId());
 
         boolean noPendingSchedule = workflow.getTasks().stream()
                 .parallel()
                 .noneMatch(wftask -> {
                     String next = getNextTasksToBeScheduled(workflow, wftask);
-                    LOGGER.info("RRR 666 next {} wfid {}", next, workflow.getWorkflowId());
                     return next != null && !taskStatusMap.containsKey(next);
                 });
 
@@ -367,7 +360,6 @@ public class DeciderService {
         // Get the following task after the last completed task
         if (SystemTaskType.is(task.getTaskType()) && SystemTaskType.DECISION.name().equals(task.getTaskType())) {
             if (task.getInputData().get("hasChildren") != null) {
-                LOGGER.info("XXXXXXX task {}, workflow {}", task, workflow);
                 return Collections.emptyList();
             }
         }
