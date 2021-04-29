@@ -332,7 +332,6 @@ public class DeciderService {
         workflow.getTasks().forEach(task -> taskStatusMap.put(task.getReferenceTaskName(), task.getStatus()));
 
         List<WorkflowTask> workflowTasks = workflow.getWorkflowDefinition().getTasks();
-
         boolean allCompletedSuccessfully = workflowTasks.stream()
                 .parallel()
                 .allMatch(wftask -> {
