@@ -860,12 +860,27 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         boolean includeTasks = true;
         if (includeTasks){
             //Delete tasks that belonged to the pruned workflows
-            QueryBuilder taskQuery = QueryBuilders.boolQuery()
-                                                  .must(QueryBuilders.termsQuery("workflowId", workflowIds));
-            pruneDocs(indexName, taskQuery, TASK_DOC_TYPE, -1, null);
+            int pageSize = 100;
+            List<List<String>> pages = getPages(workflowIds, pageSize);
+            for (List<String> page: pages) {
+                QueryBuilder taskQuery = QueryBuilders.termsQuery("workflowId", page);
+                pruneDocs(indexName, taskQuery, TASK_DOC_TYPE, -1, null);
+            }
         }
-
         return workflowIds;
+    }
+
+    public static <T> List<List<T>> getPages(List<T> c, Integer pageSize) {
+        if (c == null)
+            return Collections.emptyList();
+        List<T> list = new ArrayList<T>(c);
+        if (pageSize == null || pageSize <= 0 || pageSize > list.size())
+            pageSize = list.size();
+        int numPages = (int) Math.ceil((double)list.size() / (double)pageSize);
+        List<List<T>> pages = new ArrayList<List<T>>(numPages);
+        for (int pageNum = 0; pageNum < numPages;)
+            pages.add(list.subList(pageNum * pageSize, Math.min(++pageNum * pageSize, list.size())));
+        return pages;
     }
 
     private List<String> pruneDocs(String indexName, QueryBuilder q, String docType, int batchSize, List<String> sortOptions) {
