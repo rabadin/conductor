@@ -861,10 +861,11 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         if (includeTasks){
             //Delete tasks that belonged to the pruned workflows
             int pageSize = 100;
+            int taskBatchSize = 4000;
             List<List<String>> pages = getPages(workflowIds, pageSize);
             for (List<String> page: pages) {
                 QueryBuilder taskQuery = QueryBuilders.termsQuery("workflowId", page);
-                pruneDocs(indexName, taskQuery, TASK_DOC_TYPE, -1, null);
+                pruneDocs(indexName, taskQuery, TASK_DOC_TYPE, taskBatchSize, null);
             }
         }
         return workflowIds;
