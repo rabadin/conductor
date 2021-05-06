@@ -290,7 +290,7 @@ public class ExecutionDAOFacade {
             indexDAO.pruneTasks(taskIds);
 
         } catch (Exception e) {
-            LOGGER.error("Pruning failed", e);
+            LOGGER.error("Pruning failed due to {}", e.getMessage());
         }
     }
 

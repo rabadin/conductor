@@ -723,7 +723,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.from(start);
-        searchSourceBuilder.size(size);
+        if (size > 0) searchSourceBuilder.size(size);
         searchSourceBuilder.fetchSource(includeDocs);
 
         if (sortOptions != null && !sortOptions.isEmpty()) {
@@ -805,6 +805,23 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
             }
             pruneBulkRecords(bulkRequest, docType, taskIds.size(), 0);
         }
+
+        //Prune all tasks older than 14 days (or) all completed tasks no matter what
+ /*
+        int daysToKeep = config.getPruningDaysToKeep();
+        int batchSize = config.getPruningBatchSize();
+        DateTime dateTime = new DateTime();
+        QueryBuilder taskQuery = QueryBuilders.boolQuery()
+                                    .must(QueryBuilders.boolQuery()
+                                            .should(QueryBuilders.termQuery("status", "COMPLETED"))
+                                            .must(QueryBuilders.rangeQuery("updateTime").gt(dateTime.minusDays(daysToKeep)))
+                                    .must(QueryBuilders.boolQuery()
+                                            .must(QueryBuilders.termQuery("status", "FAILED"))
+                                            .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeep)))
+                                    );
+
+        pruneDocs(indexName, taskQuery, TASK_DOC_TYPE, batchSize, Collections.singletonList("endTime:ASC"));
+  */
     }
 
     /**
@@ -814,24 +831,65 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
     @Override
     public List<String> pruneWorkflows() {
         // Prune oldest archived workflows older than 7 days by batch size
-        int daysToKeep = 7;
+        int daysToKeep = config.getPruningDaysToKeep();
         DateTime dateTime = new DateTime();
+        //Prune all workflows older than 14 days (or) all archived & completed workflows no matter what
+        int daysForDebug = 14;
+        int daysWaitingAllowed = 180;
         QueryBuilder wfQuery = QueryBuilders.boolQuery()
-                                            .must(QueryBuilders.existsQuery("archived"))
-                                            .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeep)));
+                                    .should(QueryBuilders.boolQuery()
+                                        .should(QueryBuilders.termQuery("status", "COMPLETED"))
+                                        .should(QueryBuilders.termQuery("status", "TIMED_OUT"))
+                                        .should(QueryBuilders.termQuery("status", "TERMINATED"))
+                                        .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysForDebug)))
+                                        .minimumShouldMatch(1)
+                                    )
+                                    .should(QueryBuilders.boolQuery()
+                                        .must(QueryBuilders.termQuery("status", "FAILED"))
+                                        .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeep)))
+                                    )
+                                    .should(QueryBuilders.boolQuery()
+                                        .must(QueryBuilders.termQuery("status", "RUNNING"))
+                                        .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysWaitingAllowed)))
+                                    );
 
-        List<String> workflowIds = pruneDocs(indexName, wfQuery, WORKFLOW_DOC_TYPE, Collections.singletonList("endTime:ASC"));
+        int batchSize = config.getPruningBatchSize();
+        List<String> workflowIds = pruneDocs(indexName, wfQuery, WORKFLOW_DOC_TYPE, batchSize, Collections.singletonList("endTime:ASC"));
 
+        // If needed, this can be made optional by passing it as argument
+        boolean includeTasks = true;
+        if (includeTasks){
+            //Delete tasks that belonged to the pruned workflows
+            int pageSize = 100;
+            int taskBatchSize = 4000;
+            List<List<String>> pages = getPages(workflowIds, pageSize);
+            for (List<String> page: pages) {
+                QueryBuilder taskQuery = QueryBuilders.termsQuery("workflowId", page);
+                pruneDocs(indexName, taskQuery, TASK_DOC_TYPE, taskBatchSize, null);
+            }
+        }
         return workflowIds;
     }
 
-    private List<String> pruneDocs(String indexName, QueryBuilder q, String docType, List<String> sortOptions) {
+    public static <T> List<List<T>> getPages(List<T> c, Integer pageSize) {
+        if (c == null)
+            return Collections.emptyList();
+        List<T> list = new ArrayList<T>(c);
+        if (pageSize == null || pageSize <= 0 || pageSize > list.size())
+            pageSize = list.size();
+        int numPages = (int) Math.ceil((double)list.size() / (double)pageSize);
+        List<List<T>> pages = new ArrayList<List<T>>(numPages);
+        for (int pageNum = 0; pageNum < numPages;)
+            pages.add(list.subList(pageNum * pageSize, Math.min(++pageNum * pageSize, list.size())));
+        return pages;
+    }
+
+    private List<String> pruneDocs(String indexName, QueryBuilder q, String docType, int batchSize, List<String> sortOptions) {
         //SearchResult<String> docIds;
         List<String> docIds = new LinkedList<>();
         long totalDocs = 0;
         long searchTimeinMills = 0;
         try {
-            int batchSize = config.getPruningBatchSize();
             SearchResponse response = getSearchResponse(indexName, q, 0, batchSize, sortOptions, docType, false);
             totalDocs = response.getHits().getTotalHits();
             searchTimeinMills = response.getTookInMillis();
