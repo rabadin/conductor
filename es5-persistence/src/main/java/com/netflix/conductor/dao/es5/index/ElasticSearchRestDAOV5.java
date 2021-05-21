@@ -805,23 +805,6 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
             }
             pruneBulkRecords(bulkRequest, docType, taskIds.size(), 0);
         }
-
-        //Prune all tasks older than 14 days (or) all completed tasks no matter what
- /*
-        int daysToKeep = config.getPruningDaysToKeep();
-        int batchSize = config.getPruningBatchSize();
-        DateTime dateTime = new DateTime();
-        QueryBuilder taskQuery = QueryBuilders.boolQuery()
-                                    .must(QueryBuilders.boolQuery()
-                                            .should(QueryBuilders.termQuery("status", "COMPLETED"))
-                                            .must(QueryBuilders.rangeQuery("updateTime").gt(dateTime.minusDays(daysToKeep)))
-                                    .must(QueryBuilders.boolQuery()
-                                            .must(QueryBuilders.termQuery("status", "FAILED"))
-                                            .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeep)))
-                                    );
-
-        pruneDocs(indexName, taskQuery, TASK_DOC_TYPE, batchSize, Collections.singletonList("endTime:ASC"));
-  */
     }
 
     /**
@@ -830,12 +813,11 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
      */
     @Override
     public List<String> pruneWorkflows() {
-        // Prune oldest archived workflows older than 7 days by batch size
         int daysToKeep = config.getPruningDaysToKeep();
         DateTime dateTime = new DateTime();
         //Prune all workflows older than 14 days (or) all archived & completed workflows no matter what
         int daysForDebug = 14;
-        int daysWaitingAllowed = 180;
+        int daysWaitingAllowed = 181;
         QueryBuilder wfQuery = QueryBuilders.boolQuery()
                                     .should(QueryBuilders.boolQuery()
                                         .should(QueryBuilders.termQuery("status", "COMPLETED"))
@@ -871,6 +853,12 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         return workflowIds;
     }
 
+    /**
+     * Converts a list into a paged list based on the pagesize.
+     * @param c list of workflow ids.
+     * @param pageSize
+     * @return paged list of workflow ids.
+     * ** */
     public static <T> List<List<T>> getPages(List<T> c, Integer pageSize) {
         if (c == null)
             return Collections.emptyList();
@@ -884,6 +872,15 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         return pages;
     }
 
+    /**
+     * prune records as a bulk request.  This is efficient compared to individual doc deletion.
+     * @param indexName ES index.
+     * @param q search query.
+     * @param docType Either workflow or task doctype.
+     * @param batchSize pruning batch size.
+     * @param sortOptions docs will be sorted before search.
+     * @return list of workflow Ids that were pruned.
+     * ** */
     private List<String> pruneDocs(String indexName, QueryBuilder q, String docType, int batchSize, List<String> sortOptions) {
         //SearchResult<String> docIds;
         List<String> docIds = new LinkedList<>();
@@ -912,6 +909,13 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         return docIds;
     }
 
+    /**
+     * prune records as a bulk request.  This is efficient compared to individual doc deletion.
+     * @param bulkRequest ES request object containing doc Ids.
+     * @param docType Either workflow or task doctype.
+     * @param totalDocs total documents that have to be pruned.
+     * @param searchTimeinMills time taken to search the docs that will be pruned.
+     ** */
     private void pruneBulkRecords(BulkRequest bulkRequest, String docType, long totalDocs, long searchTimeinMills) {
         long pruneTimeinMills = 0;
         long prunedDocs = 0;
@@ -926,7 +930,8 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
             logger.error("Failed to process bulk pruning response for '{}' from index due to {}", docType, e.getMessage());
         }
     }
-        private void indexObject(final String index, final String docType, final String docId, final Object doc) {
+
+    private void indexObject(final String index, final String docType, final String docId, final Object doc) {
 
         byte[] docBytes;
         try {
