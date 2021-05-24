@@ -808,7 +808,7 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
     }
 
     /**
-     *   Prune workflows that are archived
+     *   Prune workflows that are not needed. Pruning is done based status and time frame
      * @return list of workflow Ids that were pruned.
      */
     @Override

@@ -251,6 +251,11 @@ public class ExecutionDAOFacade {
         executionDAO.removeFromPendingWorkflow(workflowType, workflowId);
     }
 
+    /**
+     *   Prune workflows and tasks that are not needed. It is done on indexing database first. Documents that are pruned are
+     *   then checked aginst execution database and logged as stale.  Stale workflows are ocnsidered not normal and are left
+     *   due to unforeseen circumstances.  Stale entries looged need to be investigated.
+     */
     public void pruneWorkflowsAndTasks() {
         try {
             // Prune all workflows that are archived
