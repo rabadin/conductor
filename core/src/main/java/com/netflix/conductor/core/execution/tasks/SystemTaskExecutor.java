@@ -85,12 +85,12 @@ class SystemTaskExecutor {
             if (slotsToAcquire > 0 && semaphoreUtil.acquireSlots(slotsToAcquire)) {
                 acquiredSlots += slotsToAcquire;
             }
-            LOGGER.debug("Polling queue: {} with {} slots acquired", queueName, acquiredSlots);
+            //LOGGER.debug("Polling queue: {} with {} slots acquired", queueName, acquiredSlots);
 
             List<String> polledTaskIds = queueDAO.pop(queueName, acquiredSlots, 200);
 
             Monitors.recordTaskPoll(queueName);
-            LOGGER.debug("Polling queue:{}, got {} tasks", queueName, polledTaskIds.size());
+            //LOGGER.debug("Polling queue:{}, got {} tasks", queueName, polledTaskIds.size());
 
             if (polledTaskIds.size() > 0) {
                 // Immediately release unused permits when polled no. of messages are less than acquired permits

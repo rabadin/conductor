@@ -910,6 +910,16 @@ public class ElasticSearchRestDAOV6 extends ElasticSearchBaseDAO implements Inde
         return workflowIds.getResults();
     }
 
+    @Override
+    public List<String> pruneWorkflows() {
+        throw new UnsupportedOperationException("This method is not currently implemented");
+    }
+
+    @Override
+    public void pruneTasks(List<String> taskIds) {
+        throw new UnsupportedOperationException("This method is not currently implemented");
+    }
+
     private void indexObject(final String index, final String docType, final Object doc) {
         indexObject(index, docType, null, doc);
     }

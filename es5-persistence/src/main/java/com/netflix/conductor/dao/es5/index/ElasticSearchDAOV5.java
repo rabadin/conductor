@@ -211,9 +211,10 @@ public class ElasticSearchDAOV5 implements IndexDAO {
 
         try {
             initIndex();
-            updateLogIndexName();
-            Executors.newScheduledThreadPool(1)
-                .scheduleAtFixedRate(this::updateLogIndexName, 0, 1, TimeUnit.HOURS);
+            if (config.isTaskExecLogIndexingEnabled()) {
+                updateLogIndexName();
+                Executors.newScheduledThreadPool(1).scheduleAtFixedRate(this::updateLogIndexName, 0, 1, TimeUnit.HOURS);
+            }
         } catch (Exception e) {
             logger.error("Error creating index templates", e);
         }
@@ -746,6 +747,16 @@ public class ElasticSearchDAOV5 implements IndexDAO {
         return Arrays.stream(hits.getHits())
             .map(SearchHit::getId)
             .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+    @Override
+    public List<String> pruneWorkflows() {
+        throw new UnsupportedOperationException("This method is not currently implemented");
+    }
+
+    @Override
+    public void pruneTasks(List<String> taskIds) {
+        throw new UnsupportedOperationException("This method is not currently implemented");
     }
 
     @Override
