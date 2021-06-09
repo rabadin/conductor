@@ -1,5 +1,9 @@
 package com.netflix.conductor.contribs.publisher;
 
+import com.google.inject.Inject;
+//import com.netflix.conductor.core.config.Configuration;
+import com.netflix.conductor.contribs.publisher.PublisherConfiguration;
+
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpRequestRetryHandler;
@@ -17,38 +21,34 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Singleton
 public class RestClientManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestClientManager.class);
+    private final PublisherConfiguration config;
+    private PoolingHttpClientConnectionManager cm;
+    private RequestConfig rc;
+    private HttpRequestRetryHandler retryHandle;
+    private CloseableHttpClient client;
 
     enum NotificationType {
         TASK,
         WORKFLOW
     };
 
-    private static final String TASK_NOTIFICATION_ENDPOINT = "workflow/TaskNotifications";
-    private static final String WORKFLOW_NOTIFICATION_ENDPOINT = "workflow/WorkflowNotifications";
-    private static final String URL = "http://bullwinkle.default.svc.cluster.local:7979/v1";
-
-    private static final int DEFAULT_CONNECT_TIMEOUT = 10;
-    private static final int DEFAULT_REQUEST_TIMEOUT = 10;
-    private static final int DEFAULT_SOCKET_TIMEOUT = 10;
-    private static final int DEFAULT_RETRY_COUNT = 5;
-    private static final int DEFAULT_RETRY_INTERVAL = 10;
-
-    private static final String HEADER_DOMAIN_GROUP = "X-Starship-DomainGroup";
-    private static final String HEADER_ACCOUNT_COOKIE = "x-barracuda-account";
-    private static final String HEADER_PREFER = "Prefer";
-    private static final String HEADER_PREFER_VALUE = "respond-async";
-
-    private PoolingHttpClientConnectionManager cm = prepareConnManager();
-    private RequestConfig rc = prepareRequestConfig();
-    private HttpRequestRetryHandler retryHandle = prepareRetryHandle();
-    private CloseableHttpClient client = prepareClient();
-
     private String NotifType;
     private String NotifId;
+
+    @Inject
+    public RestClientManager(PublisherConfiguration config){
+        this.config = config;
+        LOGGER.info("config is {}", config);
+        this.cm = prepareConnManager();
+        this.rc = prepareRequestConfig();
+        this.retryHandle = prepareRetryHandle();
+        this.client = prepareClient();
+    }
 
     private PoolingHttpClientConnectionManager prepareConnManager (){
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
@@ -59,15 +59,15 @@ public class RestClientManager {
 
     private RequestConfig prepareRequestConfig() {
         return RequestConfig.custom()
-                .setConnectTimeout(DEFAULT_CONNECT_TIMEOUT * 1000)
-                .setConnectionRequestTimeout(DEFAULT_REQUEST_TIMEOUT * 1000)
-                .setSocketTimeout(DEFAULT_SOCKET_TIMEOUT * 1000).build();
+                .setConnectionRequestTimeout(this.config.getConnectionMgrTimeoutInSec() * 1000)
+                .setSocketTimeout(this.config.getSocketTimeoutInSec() * 1000)
+                .setConnectTimeout(this.config.getRequestTimeoutInSec() * 1000).build();
     }
 
     private HttpRequestRetryHandler prepareRetryHandle() {
         return (exception, executionCount, context) -> {
             LOGGER.info("Retrying {} Id: {}", this.NotifType, this.NotifId);
-            return executionCount <= DEFAULT_RETRY_COUNT;
+            return executionCount <= this.config.getRequestRetryCount();
         };
     }
 
@@ -80,18 +80,17 @@ public class RestClientManager {
                 .build();
     }
 
-    public RestClientManager(){
-    }
 
-    public void postNotification(RestClientManager.NotificationType notifType, String data, String domainGroupMoId, String accountMoId, String id) throws IOException {
+
+    void postNotification(RestClientManager.NotificationType notifType, String data, String domainGroupMoId, String accountMoId, String id) throws IOException {
         NotifType = notifType.toString();
         NotifId = id;
         String url = prepareUrl(notifType);
 
         Map<String, String> headers = new HashMap<>();
-        headers.put(HEADER_PREFER, HEADER_PREFER_VALUE);
-        headers.put(HEADER_DOMAIN_GROUP, domainGroupMoId);
-        headers.put(HEADER_ACCOUNT_COOKIE, accountMoId);
+        headers.put(this.config.getHeaderPrefer(), this.config.getHeaderPreferValue());
+        headers.put(this.config.getHeaderDomainGroup(), domainGroupMoId);
+        headers.put(this.config.getHeaderAccountCookie(), accountMoId);
 
         HttpPost request = createPostRequest(url, data, headers);
 
@@ -102,13 +101,13 @@ public class RestClientManager {
         String urlEndPoint = "";
 
         if (notifType == RestClientManager.NotificationType.TASK) {
-            urlEndPoint = TASK_NOTIFICATION_ENDPOINT;
+            urlEndPoint = this.config.getEndPointTask();
 
         }
         else if (notifType == RestClientManager.NotificationType.WORKFLOW){
-            urlEndPoint = WORKFLOW_NOTIFICATION_ENDPOINT;
+            urlEndPoint = this.config.getEndPointWorkflow();
         }
-        return URL + "/" + urlEndPoint;
+        return this.config.getNotificationUrl() + "/" + urlEndPoint;
     }
 
     private HttpPost createPostRequest(String url, String data, Map<String, String> headers) throws IOException {

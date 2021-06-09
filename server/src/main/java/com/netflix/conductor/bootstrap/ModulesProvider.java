@@ -204,7 +204,7 @@ public class ModulesProvider implements Provider<List<AbstractModule>> {
         new JsonJqTransform(new JsonMapperProvider().get());
         modules.add(new ServerModule());
 
-        new com.netflix.conductor.contribs.publisher.RestClientManager();
+        //new com.netflix.conductor.contribs.publisher.RestClientManager(configuration);
 
         return modules;
     }
