@@ -39,6 +39,12 @@ public interface PublisherConfiguration extends Configuration {
     String NOTIFICATION_REQUEST_RETRY_INTERVAL_MS_PROPERTY_NAME = "notification.request.retry.interval.ms";
     int NOTIFICATION_DEFAULT_RETRY_INTERVAL_MS_DEFAULT_VALUE = 10;
 
+    String NOTIFICATION_CONNECTION_POOL_MAX_REQUEST_PROPERTY_NAME = "notification.connection.pool.max.request";
+    int NOTIFICATION_CONNECTION_POOL_MAX_REQUEST_DEFAULT_VALUE = 3;
+
+    String NOTIFICATION_CONNECTION_POOL_MAX_REQUEST_PER_ROUTE_PROPERTY_NAME = "notification.connection.pool.max.request.per.route";
+    int NOTIFICATION_CONNECTION_POOL_MAX_REQUEST_PER_ROUTE_DEFAULT_VALUE = 3;
+
     default String getNotificationUrl() {
         return getProperty(NOTIFICATION_URL_PROPERTY_NAME, NOTIFICATION_URL_DEFAULT_VALUE);
     }
@@ -82,8 +88,16 @@ public interface PublisherConfiguration extends Configuration {
     default int getRequestRetryCount() {
         return getIntProperty(NOTIFICATION_REQUEST_RETRY_COUNT_PROPERTY_NAME, NOTIFICATION_REQUEST_RETRY_COUNT_DEFAULT_VALUE);
     }
+
     default int getRequestRetryInterval() {
         return getIntProperty(NOTIFICATION_REQUEST_RETRY_INTERVAL_MS_PROPERTY_NAME, NOTIFICATION_DEFAULT_RETRY_INTERVAL_MS_DEFAULT_VALUE);
+    }
+
+    default int getConnectionPoolMaxRequest() {
+        return getIntProperty(NOTIFICATION_CONNECTION_POOL_MAX_REQUEST_PROPERTY_NAME, NOTIFICATION_CONNECTION_POOL_MAX_REQUEST_DEFAULT_VALUE);
+    }
+    default int getConnectionPoolMaxRequestPerRoute() {
+        return getIntProperty(NOTIFICATION_CONNECTION_POOL_MAX_REQUEST_PER_ROUTE_PROPERTY_NAME, NOTIFICATION_CONNECTION_POOL_MAX_REQUEST_PER_ROUTE_DEFAULT_VALUE);
     }
 
 }

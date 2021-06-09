@@ -1,9 +1,6 @@
 package com.netflix.conductor.contribs.publisher;
 
 import com.google.inject.Inject;
-//import com.netflix.conductor.core.config.Configuration;
-import com.netflix.conductor.contribs.publisher.PublisherConfiguration;
-
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpRequestRetryHandler;
@@ -21,7 +18,6 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Singleton
 public class RestClientManager {
@@ -37,13 +33,12 @@ public class RestClientManager {
         WORKFLOW
     };
 
-    private String NotifType;
-    private String NotifId;
+    private String notifType;
+    private String notifId;
 
     @Inject
     public RestClientManager(PublisherConfiguration config){
         this.config = config;
-        LOGGER.info("config is {}", config);
         this.cm = prepareConnManager();
         this.rc = prepareRequestConfig();
         this.retryHandle = prepareRetryHandle();
@@ -52,8 +47,8 @@ public class RestClientManager {
 
     private PoolingHttpClientConnectionManager prepareConnManager (){
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
-        connManager.setMaxTotal(5);
-        connManager.setDefaultMaxPerRoute(3);
+        connManager.setMaxTotal(this.config.getConnectionPoolMaxRequest());
+        connManager.setDefaultMaxPerRoute(this.config.getConnectionPoolMaxRequestPerRoute());
         return connManager;
     }
 
@@ -66,7 +61,7 @@ public class RestClientManager {
 
     private HttpRequestRetryHandler prepareRetryHandle() {
         return (exception, executionCount, context) -> {
-            LOGGER.info("Retrying {} Id: {}", this.NotifType, this.NotifId);
+            LOGGER.info("Retrying {} Id: {}", this.notifType, this.notifId);
             return executionCount <= this.config.getRequestRetryCount();
         };
     }
@@ -80,11 +75,9 @@ public class RestClientManager {
                 .build();
     }
 
-
-
     void postNotification(RestClientManager.NotificationType notifType, String data, String domainGroupMoId, String accountMoId, String id) throws IOException {
-        NotifType = notifType.toString();
-        NotifId = id;
+        this.notifType = notifType.toString();
+        notifId = id;
         String url = prepareUrl(notifType);
 
         Map<String, String> headers = new HashMap<>();
@@ -112,14 +105,11 @@ public class RestClientManager {
 
     private HttpPost createPostRequest(String url, String data, Map<String, String> headers) throws IOException {
         HttpPost httpPost = new HttpPost(url);
-
         StringEntity entity = new StringEntity(data);
         httpPost.setEntity(entity);
-
         httpPost.setHeader("Accept", "application/json");
         httpPost.setHeader("Content-type", "application/json");
         headers.forEach(httpPost::setHeader);
-
         return httpPost;
     }
 
