@@ -994,15 +994,19 @@ public class WorkflowExecutor {
                 return true;
             }
 
+            LOGGER.info("RRR outcome tasksToBeScheduled {}", outcome.tasksToBeScheduled);
             List<Task> tasksToBeScheduled = outcome.tasksToBeScheduled;
             setTaskDomains(tasksToBeScheduled, workflow);
             List<Task> tasksToBeUpdated = outcome.tasksToBeUpdated;
             boolean stateChanged = false;
 
+            LOGGER.info("RRR 1 tasksToBeScheduled {}", tasksToBeScheduled);
             tasksToBeScheduled = dedupAndAddTasks(workflow, tasksToBeScheduled);
-
+            LOGGER.info("RRR  2 tasksToBeScheduled {}", tasksToBeScheduled);
             for (Task task : outcome.tasksToBeScheduled) {
+                LOGGER.info("RRR  In task {}", task);
                 if (isSystemTask.and(isNonTerminalTask).test(task)) {
+                    LOGGER.info("RRR I can't be here");
                     WorkflowSystemTask workflowSystemTask = WorkflowSystemTask.get(task.getTaskType());
                     Workflow workflowInstance = deciderService.populateWorkflowAndTaskData(workflow);
                     if (!workflowSystemTask.isAsync() && workflowSystemTask.execute(workflowInstance, task, this)) {
@@ -1219,9 +1223,12 @@ public class WorkflowExecutor {
     public void addTaskToQueue(Task task) {
         // put in queue
         String taskQueueName = QueueUtils.getQueueName(task);
+        LOGGER.info("RRR  addTaskToQueue task {} {}", task.getTaskId(), task.getCallbackAfterSeconds());
         if (task.getCallbackAfterSeconds() > 0) {
+            LOGGER.info("RRR addTaskToQueue >0");
             queueDAO.push(taskQueueName, task.getTaskId(), task.getWorkflowPriority(), task.getCallbackAfterSeconds());
         } else {
+            LOGGER.info("RRR addTaskToQueue else");;
             queueDAO.push(taskQueueName, task.getTaskId(), task.getWorkflowPriority(), 0);
         }
         LOGGER.debug("Added task {} with priority {} to queue {} with call back seconds {}", task, task.getWorkflowPriority(), taskQueueName, task.getCallbackAfterSeconds());

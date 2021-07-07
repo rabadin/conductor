@@ -189,6 +189,9 @@ public class DeciderService {
 
                 Optional<Task> retryTask = retry(taskDefinition.orElse(null), workflowTask, pendingTask, workflow);
                 if (retryTask.isPresent()) {
+                    LOGGER.info("RRR retry retryTask {}", retryTask);
+                    LOGGER.info("RRR retry pendingTask {}", pendingTask);
+                    LOGGER.info("RRR retry workflowTask {}", workflowTask);
                     tasksToBeScheduled.put(retryTask.get().getReferenceTaskName(), retryTask.get());
                     executedTaskRefNames.remove(retryTask.get().getReferenceTaskName());
                     outcome.tasksToBeUpdated.add(pendingTask);

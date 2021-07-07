@@ -140,6 +140,7 @@ public class DynoQueueDAO implements QueueDAO {
 
     @Override
     public void push(String queueName, String id, long offsetTimeInSecond) {
+        logger.info("RRR push task {} to queue {} offset {}", id, queueName, offsetTimeInSecond);
         push(queueName, id, -1, offsetTimeInSecond);
     }
 
@@ -150,6 +151,8 @@ public class DynoQueueDAO implements QueueDAO {
         if (priority >= 0 && priority <= 99) {
             msg.setPriority(priority);
         }
+        logger.info("RRR pushed task {} to queue {} offset {}", id, queueName, offsetTimeInSecond);
+        logger.info("RRR pushed msg {}", msg);
         queues.get(queueName).push(Collections.singletonList(msg));
     }
 
