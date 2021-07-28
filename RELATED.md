@@ -20,12 +20,36 @@
 
 * https://github.com/mohelsaka/conductor-prometheus-metrics - Conductor plugin for exposing Prometheus metrics over path '/metrics'
 
+## OAuth2.0 Security Configuration
+Forked Repository - [Conductor (Secure)](https://github.com/maheshyaddanapudi/conductor/tree/oauth2)
+
+[OAuth2.0 Role Based Security!](https://github.com/maheshyaddanapudi/conductor/blob/oauth2/SECURITY.md) - Spring Security with easy configuration to secure the Conductor server APIs.
+
+Docker image published to [Docker Hub](https://hub.docker.com/repository/docker/conductorboot/server)
 
 ## Conductor Worker utilities
 
 * https://github.com/ggrcha/conductor-go-client - Conductor Golang client for writing Workers in Golang
 
 * https://github.com/courosh12/conductor-dotnet-client - Conductor DOTNET client for writing Workers in DOTNET
+  * https://github.com/TwoUnderscorez/serilog-sinks-conductor-task-log - Serilog sink for sending worker log events to Netflix Conductor
 
 * https://github.com/davidwadden/conductor-workers - Various ready made Conductor workers for common operations on some platforms (ex.: Jira, Github, Concourse)
 
+## Conductor Web UI
+
+* https://github.com/maheshyaddanapudi/conductor-ng-ui - Angular based - Conductor Workflow Management UI
+
+## Conductor Persistence
+
+### Mongo Persistence
+
+* https://github.com/maheshyaddanapudi/conductor/tree/mongo_persistence - With option to use Mongo Database as persistence unit.
+  * Mongo Persistence / Option to use Mongo Database as persistence unit.
+  * Docker Compose example with MongoDB Container.
+
+### Oracle Persistence
+
+* https://github.com/maheshyaddanapudi/conductor/tree/oracle_persistence - With option to use Oracle Database as persistence unit.
+  * Oracle Persistence / Option to use Oracle Database as persistence unit : version > 12.2 - Tested well with 19C
+  * Docker Compose example with Oracle Container.

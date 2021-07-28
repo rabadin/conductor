@@ -76,7 +76,7 @@ public abstract class AbstractProtoMapper {
         to.setTaskName( from.getTaskName() );
         to.setWorkflowName( from.getWorkflowName() );
         to.setReferenceName( from.getReferenceName() );
-        Map<String, Object> inputMap = new HashMap<String, Object>();
+        Map<String, Object> inputMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getInputMap().entrySet()) {
             inputMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -136,7 +136,7 @@ public abstract class AbstractProtoMapper {
         to.setCreated( from.getCreated() );
         to.setStatus( fromProto( from.getStatus() ) );
         to.setAction( fromProto( from.getAction() ) );
-        Map<String, Object> outputMap = new HashMap<String, Object>();
+        Map<String, Object> outputMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getOutputMap().entrySet()) {
             outputMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -224,7 +224,7 @@ public abstract class AbstractProtoMapper {
         to.setName( from.getName() );
         to.setVersion( from.getVersion() );
         to.setCorrelationId( from.getCorrelationId() );
-        Map<String, Object> inputMap = new HashMap<String, Object>();
+        Map<String, Object> inputMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getInputMap().entrySet()) {
             inputMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -260,7 +260,7 @@ public abstract class AbstractProtoMapper {
         EventHandler.TaskDetails to = new EventHandler.TaskDetails();
         to.setWorkflowId( from.getWorkflowId() );
         to.setTaskRefName( from.getTaskRefName() );
-        Map<String, Object> outputMap = new HashMap<String, Object>();
+        Map<String, Object> outputMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getOutputMap().entrySet()) {
             outputMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -375,13 +375,13 @@ public abstract class AbstractProtoMapper {
     public RerunWorkflowRequest fromProto(RerunWorkflowRequestPb.RerunWorkflowRequest from) {
         RerunWorkflowRequest to = new RerunWorkflowRequest();
         to.setReRunFromWorkflowId( from.getReRunFromWorkflowId() );
-        Map<String, Object> workflowInputMap = new HashMap<String, Object>();
+        Map<String, Object> workflowInputMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getWorkflowInputMap().entrySet()) {
             workflowInputMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
         to.setWorkflowInput(workflowInputMap);
         to.setReRunFromTaskId( from.getReRunFromTaskId() );
-        Map<String, Object> taskInputMap = new HashMap<String, Object>();
+        Map<String, Object> taskInputMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getTaskInputMap().entrySet()) {
             taskInputMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -392,12 +392,12 @@ public abstract class AbstractProtoMapper {
 
     public SkipTaskRequest fromProto(SkipTaskRequestPb.SkipTaskRequest from) {
         SkipTaskRequest to = new SkipTaskRequest();
-        Map<String, Object> taskInputMap = new HashMap<String, Object>();
+        Map<String, Object> taskInputMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getTaskInputMap().entrySet()) {
             taskInputMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
         to.setTaskInput(taskInputMap);
-        Map<String, Object> taskOutputMap = new HashMap<String, Object>();
+        Map<String, Object> taskOutputMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getTaskOutputMap().entrySet()) {
             taskOutputMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -443,7 +443,7 @@ public abstract class AbstractProtoMapper {
         to.setName( from.getName() );
         to.setVersion( from.getVersion() );
         to.setCorrelationId( from.getCorrelationId() );
-        Map<String, Object> inputMap = new HashMap<String, Object>();
+        Map<String, Object> inputMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getInputMap().entrySet()) {
             inputMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -571,6 +571,7 @@ public abstract class AbstractProtoMapper {
         if (from.getTaskDescription() != null) {
             to.setTaskDescription( from.getTaskDescription() );
         }
+        to.setSubworkflowChanged( from.isSubworkflowChanged() );
         return to.build();
     }
 
@@ -578,7 +579,7 @@ public abstract class AbstractProtoMapper {
         Task to = new Task();
         to.setTaskType( from.getTaskType() );
         to.setStatus( fromProto( from.getStatus() ) );
-        Map<String, Object> inputDataMap = new HashMap<String, Object>();
+        Map<String, Object> inputDataMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getInputDataMap().entrySet()) {
             inputDataMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -605,7 +606,7 @@ public abstract class AbstractProtoMapper {
         to.setReasonForIncompletion( from.getReasonForIncompletion() );
         to.setCallbackAfterSeconds( from.getCallbackAfterSeconds() );
         to.setWorkerId( from.getWorkerId() );
-        Map<String, Object> outputDataMap = new HashMap<String, Object>();
+        Map<String, Object> outputDataMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getOutputDataMap().entrySet()) {
             outputDataMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -630,6 +631,7 @@ public abstract class AbstractProtoMapper {
         to.setIteration( from.getIteration() );
         to.setSubWorkflowId( from.getSubWorkflowId() );
         to.setTaskDescription( from.getTaskDescription() );
+        to.setSubworkflowChanged( from.getSubworkflowChanged() );
         return to;
     }
 
@@ -729,7 +731,7 @@ public abstract class AbstractProtoMapper {
         to.setRetryDelaySeconds( from.getRetryDelaySeconds() );
         to.setResponseTimeoutSeconds( from.getResponseTimeoutSeconds() );
         to.setConcurrentExecLimit( from.getConcurrentExecLimit() );
-        Map<String, Object> inputTemplateMap = new HashMap<String, Object>();
+        Map<String, Object> inputTemplateMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getInputTemplateMap().entrySet()) {
             inputTemplateMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -840,7 +842,7 @@ public abstract class AbstractProtoMapper {
         to.setCallbackAfterSeconds( from.getCallbackAfterSeconds() );
         to.setWorkerId( from.getWorkerId() );
         to.setStatus( fromProto( from.getStatus() ) );
-        Map<String, Object> outputDataMap = new HashMap<String, Object>();
+        Map<String, Object> outputDataMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getOutputDataMap().entrySet()) {
             outputDataMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -940,6 +942,30 @@ public abstract class AbstractProtoMapper {
         return to.build();
     }
 
+    public TaskSummary fromProto(TaskSummaryPb.TaskSummary from) {
+        TaskSummary to = new TaskSummary();
+        to.setWorkflowId( from.getWorkflowId() );
+        to.setWorkflowType( from.getWorkflowType() );
+        to.setCorrelationId( from.getCorrelationId() );
+        to.setScheduledTime( from.getScheduledTime() );
+        to.setStartTime( from.getStartTime() );
+        to.setUpdateTime( from.getUpdateTime() );
+        to.setEndTime( from.getEndTime() );
+        to.setStatus( fromProto( from.getStatus() ) );
+        to.setReasonForIncompletion( from.getReasonForIncompletion() );
+        to.setExecutionTime( from.getExecutionTime() );
+        to.setQueueWaitTime( from.getQueueWaitTime() );
+        to.setTaskDefName( from.getTaskDefName() );
+        to.setTaskType( from.getTaskType() );
+        to.setInput( from.getInput() );
+        to.setOutput( from.getOutput() );
+        to.setTaskId( from.getTaskId() );
+        to.setExternalInputPayloadStoragePath( from.getExternalInputPayloadStoragePath() );
+        to.setExternalOutputPayloadStoragePath( from.getExternalOutputPayloadStoragePath() );
+        to.setWorkflowPriority( from.getWorkflowPriority() );
+        return to;
+    }
+
     public WorkflowPb.Workflow toProto(Workflow from) {
         WorkflowPb.Workflow.Builder to = WorkflowPb.Workflow.newBuilder();
         if (from.getStatus() != null) {
@@ -964,10 +990,6 @@ public abstract class AbstractProtoMapper {
         for (Map.Entry<String, Object> pair : from.getOutput().entrySet()) {
             to.putOutput( pair.getKey(), toProto( pair.getValue() ) );
         }
-        if (from.getWorkflowType() != null) {
-            to.setWorkflowType( from.getWorkflowType() );
-        }
-        to.setVersion( from.getVersion() );
         if (from.getCorrelationId() != null) {
             to.setCorrelationId( from.getCorrelationId() );
         }
@@ -977,7 +999,6 @@ public abstract class AbstractProtoMapper {
         if (from.getReasonForIncompletion() != null) {
             to.setReasonForIncompletion( from.getReasonForIncompletion() );
         }
-        to.setSchemaVersion( from.getSchemaVersion() );
         if (from.getEvent() != null) {
             to.setEvent( from.getEvent() );
         }
@@ -993,6 +1014,10 @@ public abstract class AbstractProtoMapper {
             to.setExternalOutputPayloadStoragePath( from.getExternalOutputPayloadStoragePath() );
         }
         to.setPriority( from.getPriority() );
+        for (Map.Entry<String, Object> pair : from.getVariables().entrySet()) {
+            to.putVariables( pair.getKey(), toProto( pair.getValue() ) );
+        }
+        to.setLastRetriedTime( from.getLastRetriedTime() );
         return to.build();
     }
 
@@ -1004,22 +1029,19 @@ public abstract class AbstractProtoMapper {
         to.setParentWorkflowId( from.getParentWorkflowId() );
         to.setParentWorkflowTaskId( from.getParentWorkflowTaskId() );
         to.setTasks( from.getTasksList().stream().map(this::fromProto).collect(Collectors.toCollection(ArrayList::new)) );
-        Map<String, Object> inputMap = new HashMap<String, Object>();
+        Map<String, Object> inputMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getInputMap().entrySet()) {
             inputMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
         to.setInput(inputMap);
-        Map<String, Object> outputMap = new HashMap<String, Object>();
+        Map<String, Object> outputMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getOutputMap().entrySet()) {
             outputMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
         to.setOutput(outputMap);
-        to.setWorkflowType( from.getWorkflowType() );
-        to.setVersion( from.getVersion() );
         to.setCorrelationId( from.getCorrelationId() );
         to.setReRunFromWorkflowId( from.getReRunFromWorkflowId() );
         to.setReasonForIncompletion( from.getReasonForIncompletion() );
-        to.setSchemaVersion( from.getSchemaVersion() );
         to.setEvent( from.getEvent() );
         to.setTaskToDomain( from.getTaskToDomainMap() );
         to.setFailedReferenceTaskNames( from.getFailedReferenceTaskNamesList().stream().collect(Collectors.toCollection(HashSet::new)) );
@@ -1029,6 +1051,12 @@ public abstract class AbstractProtoMapper {
         to.setExternalInputPayloadStoragePath( from.getExternalInputPayloadStoragePath() );
         to.setExternalOutputPayloadStoragePath( from.getExternalOutputPayloadStoragePath() );
         to.setPriority( from.getPriority() );
+        Map<String, Object> variablesMap = new HashMap<>();
+        for (Map.Entry<String, Value> pair : from.getVariablesMap().entrySet()) {
+            variablesMap.put( pair.getKey(), fromProto( pair.getValue() ) );
+        }
+        to.setVariables(variablesMap);
+        to.setLastRetriedTime( from.getLastRetriedTime() );
         return to;
     }
 
@@ -1089,6 +1117,9 @@ public abstract class AbstractProtoMapper {
             to.setTimeoutPolicy( toProto( from.getTimeoutPolicy() ) );
         }
         to.setTimeoutSeconds( from.getTimeoutSeconds() );
+        for (Map.Entry<String, Object> pair : from.getVariables().entrySet()) {
+            to.putVariables( pair.getKey(), toProto( pair.getValue() ) );
+        }
         return to.build();
     }
 
@@ -1099,7 +1130,7 @@ public abstract class AbstractProtoMapper {
         to.setVersion( from.getVersion() );
         to.setTasks( from.getTasksList().stream().map(this::fromProto).collect(Collectors.toCollection(ArrayList::new)) );
         to.setInputParameters( from.getInputParametersList().stream().collect(Collectors.toCollection(ArrayList::new)) );
-        Map<String, Object> outputParametersMap = new HashMap<String, Object>();
+        Map<String, Object> outputParametersMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getOutputParametersMap().entrySet()) {
             outputParametersMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -1111,6 +1142,11 @@ public abstract class AbstractProtoMapper {
         to.setOwnerEmail( from.getOwnerEmail() );
         to.setTimeoutPolicy( fromProto( from.getTimeoutPolicy() ) );
         to.setTimeoutSeconds( from.getTimeoutSeconds() );
+        Map<String, Object> variablesMap = new HashMap<>();
+        for (Map.Entry<String, Value> pair : from.getVariablesMap().entrySet()) {
+            variablesMap.put( pair.getKey(), fromProto( pair.getValue() ) );
+        }
+        to.setVariables(variablesMap);
         return to;
     }
 
@@ -1286,7 +1322,7 @@ public abstract class AbstractProtoMapper {
         to.setName( from.getName() );
         to.setTaskReferenceName( from.getTaskReferenceName() );
         to.setDescription( from.getDescription() );
-        Map<String, Object> inputParametersMap = new HashMap<String, Object>();
+        Map<String, Object> inputParametersMap = new HashMap<>();
         for (Map.Entry<String, Value> pair : from.getInputParametersMap().entrySet()) {
             inputParametersMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }
@@ -1296,7 +1332,7 @@ public abstract class AbstractProtoMapper {
         to.setCaseValueParam( from.getCaseValueParam() );
         to.setCaseExpression( from.getCaseExpression() );
         to.setScriptExpression( from.getScriptExpression() );
-        Map<String, List<WorkflowTask>> decisionCasesMap = new HashMap<String, List<WorkflowTask>>();
+        Map<String, List<WorkflowTask>> decisionCasesMap = new HashMap<>();
         for (Map.Entry<String, WorkflowTaskPb.WorkflowTask.WorkflowTaskList> pair : from.getDecisionCasesMap().entrySet()) {
             decisionCasesMap.put( pair.getKey(), fromProto( pair.getValue() ) );
         }

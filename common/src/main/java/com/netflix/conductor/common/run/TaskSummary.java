@@ -1,17 +1,14 @@
 /*
- * Copyright 2016 Netflix, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2020 Netflix, Inc.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package com.netflix.conductor.common.run;
 
@@ -20,80 +17,78 @@ import com.github.vmg.protogen.annotations.ProtoField;
 import com.github.vmg.protogen.annotations.ProtoMessage;
 import com.netflix.conductor.common.metadata.tasks.Task;
 import com.netflix.conductor.common.metadata.tasks.Task.Status;
+import com.netflix.conductor.common.utils.SummaryUtil;
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.TimeZone;
-import org.apache.commons.lang3.StringUtils;
 
-/**
- * @author Viren
- *
- */
-@ProtoMessage(fromProto = false)
+@ProtoMessage
 public class TaskSummary {
 
-	/**
-	 * The time should be stored as GMT
-	 */
-	private static final TimeZone gmt = TimeZone.getTimeZone("GMT");
+    /**
+     * The time should be stored as GMT
+     */
+    private static final TimeZone GMT = TimeZone.getTimeZone("GMT");
 
-	@ProtoField(id = 1)
-	private String workflowId;
+    @ProtoField(id = 1)
+    private String workflowId;
 
-	@ProtoField(id = 2)
-	private String workflowType;
+    @ProtoField(id = 2)
+    private String workflowType;
 
-	@ProtoField(id = 3)
-	private String correlationId;
+    @ProtoField(id = 3)
+    private String correlationId;
 
-	@ProtoField(id = 4)
-	private String scheduledTime;
+    @ProtoField(id = 4)
+    private String scheduledTime;
 
-	@ProtoField(id = 5)
-	private String startTime;
+    @ProtoField(id = 5)
+    private String startTime;
 
-	@ProtoField(id = 6)
-	private String updateTime;
+    @ProtoField(id = 6)
+    private String updateTime;
 
-	@ProtoField(id = 7)
-	private String endTime;
+    @ProtoField(id = 7)
+    private String endTime;
 
-	@ProtoField(id = 8)
-	private Status status;
+    @ProtoField(id = 8)
+    private Task.Status status;
 
-	@ProtoField(id = 9)
-	private String reasonForIncompletion;
+    @ProtoField(id = 9)
+    private String reasonForIncompletion;
 
-	@ProtoField(id = 10)
-	private long executionTime;
+    @ProtoField(id = 10)
+    private long executionTime;
 
-	@ProtoField(id = 11)
-	private long queueWaitTime;
+    @ProtoField(id = 11)
+    private long queueWaitTime;
 
-	@ProtoField(id = 12)
-	private String taskDefName;
+    @ProtoField(id = 12)
+    private String taskDefName;
 
-	@ProtoField(id = 13)
-	private String taskType;
+    @ProtoField(id = 13)
+    private String taskType;
 
-	@ProtoField(id = 14)
-	private String input;
+    @ProtoField(id = 14)
+    private String input;
 
-	@ProtoField(id = 15)
-	private String output;
+    @ProtoField(id = 15)
+    private String output;
 
-	@ProtoField(id = 16)
-	private String taskId;
+    @ProtoField(id = 16)
+    private String taskId;
 
-	@ProtoField(id = 17)
-	private String externalInputPayloadStoragePath;
+    @ProtoField(id = 17)
+    private String externalInputPayloadStoragePath;
 
-	@ProtoField(id = 18)
-	private String externalOutputPayloadStoragePath;
+    @ProtoField(id = 18)
+    private String externalOutputPayloadStoragePath;
 
-	@ProtoField(id = 19)
-	private int workflowPriority;
+    @ProtoField(id = 19)
+    private int workflowPriority;
 
 	@ProtoField(id = 20)
 	private String taskDescription;
@@ -136,7 +131,7 @@ public class TaskSummary {
 			try {
 				this.input = om.writeValueAsString(task.getInputData());
 			} catch (Exception e) {
-				this.input = task.getInputData().toString();
+				this.input = SummaryUtil.serializeInputOutput(task.getInputData());
 			}
 		}
 		if (task.getOutputData() != null) {
@@ -144,12 +139,12 @@ public class TaskSummary {
                         try {
                                 this.output = om.writeValueAsString(task.getOutputData());
                         } catch (Exception e) {
-                                this.output = task.getOutputData().toString();
+                                this.output = SummaryUtil.serializeInputOutput(task.getOutputData());
                         }
                 }
 
 		if (task.getOutputData() != null) {
-			this.output = task.getOutputData().toString();
+			this.output = SummaryUtil.serializeInputOutput(task.getOutputData());
 		}
 
 		if (task.getEndTime() > 0) {
@@ -171,16 +166,24 @@ public class TaskSummary {
 		return workflowId;
 	}
 
-	public String getWorkflowType() {
-		return workflowType;
-	}
-
-	/**
+    /**
 	 * @param workflowId the workflowId to set
 	 */
 	public void setWorkflowId(String workflowId) {
 		this.workflowId = workflowId;
 	}
+
+	public String getWorkflowType() {
+		return workflowType;
+	}
+
+    /**
+     * @param workflowType the workflowType to set
+     */
+    public void setWorkflowType(String workflowType) {
+        this.workflowType = workflowType;
+    }
+	
 
 	/**
 	 * @return the correlationId
