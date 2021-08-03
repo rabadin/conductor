@@ -66,11 +66,12 @@ public class TaskStatusPublisher implements TaskStatusListener {
                 }
                 catch (Exception e) {
                     if (taskNotification != null) {
-                        LOGGER.error("Failed to publish task: {}", taskNotification.getWorkflowId());
+                        LOGGER.error("Failed to publish task: {}", taskNotification.getTaskId());
                     } else {
                         LOGGER.error("Failed to publish task: Task is NULL");
                     }
                     LOGGER.error(e.toString());
+                    e.printStackTrace(System.out);
                 }
             }
         }
@@ -87,7 +88,7 @@ public class TaskStatusPublisher implements TaskStatusListener {
     public void onTaskScheduled(Task task) {
         try {
             blockingQueue.put(task);
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error("Failed to enqueue task: Id {} Type {} of workflow {} ", task.getTaskId(), task.getTaskType(), task.getWorkflowInstanceId());
             LOGGER.error(e.toString());
         }

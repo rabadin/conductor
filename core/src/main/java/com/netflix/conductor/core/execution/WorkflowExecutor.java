@@ -826,16 +826,20 @@ public class WorkflowExecutor {
             // Task was already updated....
             queueDAO.remove(taskQueueName, taskResult.getTaskId());
             LOGGER.info("Task: {} has already finished execution with status: {} within workflow: {}. Removed task from queue: {}", task.getTaskId(), task.getStatus(), task.getWorkflowInstanceId(), taskQueueName);
-            Monitors.recordUpdateConflict(task.getTaskType(), workflowInstance.getWorkflowName(), task.getStatus());
-            return;
+            //Monitors.recordUpdateConflict(task.getTaskType(), workflowInstance.getWorkflowName(), task.getStatus());
+            //return;
+            String errorMsg = String.format("Task: %s has already finished execution with status: %s within workflow: %s.", task.getTaskId(), task.getStatus(), task.getWorkflowInstanceId());
+            throw new ApplicationException(Code.CONFLICT, errorMsg);
         }
 
         if (workflowInstance.getStatus().isTerminal()) {
             // Workflow is in terminal state
             queueDAO.remove(taskQueueName, taskResult.getTaskId());
             LOGGER.info("Workflow: {} has already finished execution. Task update for: {} ignored and removed from Queue: {}.", workflowInstance, taskResult.getTaskId(), taskQueueName);
-            Monitors.recordUpdateConflict(task.getTaskType(), workflowInstance.getWorkflowName(), workflowInstance.getStatus());
-            return;
+            //Monitors.recordUpdateConflict(task.getTaskType(), workflowInstance.getWorkflowName(), workflowInstance.getStatus());
+            //return;
+            String errorMsg = String.format("Workflow: %s has already finished execution. Task update for: %s ignored.", workflowInstance, taskResult.getTaskId());
+            throw new ApplicationException(Code.CONFLICT, errorMsg);
         }
 
         if (taskResult.getStatus() == TaskResult.Status.IN_PROGRESS && task.getStartTime() == 0) {
