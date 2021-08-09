@@ -21,7 +21,7 @@ package com.netflix.conductor.contribs;
 import com.google.inject.AbstractModule;
 import com.netflix.conductor.contribs.publisher.*;
 import com.netflix.conductor.core.execution.TaskStatusListener;
-import com.netflix.conductor.core.execution.WorkflowStatusListener;
+//import com.netflix.conductor.core.execution.WorkflowStatusListener;
 
 public class PublisherModule extends AbstractModule {
 

@@ -13,7 +13,7 @@
 package com.netflix.conductor.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Singleton;
+//import com.google.inject.Singleton;
 import com.netflix.conductor.annotations.Audit;
 import com.netflix.conductor.annotations.Trace;
 import com.netflix.conductor.common.run.SearchResult;
@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Audit
 @Trace
 @Service
@@ -33,9 +34,8 @@ public class WorkflowBulkServiceImpl implements WorkflowBulkService {
     private final ExecutionDAOFacade executionDAOFacade;
     private final WorkflowExecutor workflowExecutor;
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkflowBulkService.class);
-    private final WorkflowExecutor workflowExecutor;
 
-    @Inject
+
     public WorkflowBulkServiceImpl(WorkflowExecutor workflowExecutor,
                                    ExecutionDAOFacade executionDAOFacade) {
         this.workflowExecutor = workflowExecutor;
@@ -154,8 +154,7 @@ public class WorkflowBulkServiceImpl implements WorkflowBulkService {
      * @param archiveWorkflow Archives the workflow
      * @return bulk response object containing a list of succeeded workflows and a list of failed ones with errors
      */
-    @Service
-    public BulkResponse delete(List<String> workflowIds, boolean archiveWorkflow) {
+     public BulkResponse delete(List<String> workflowIds, boolean archiveWorkflow) {
         BulkResponse bulkResponse = new BulkResponse();
         for (String workflowId : workflowIds) {
             try {
@@ -169,7 +168,6 @@ public class WorkflowBulkServiceImpl implements WorkflowBulkService {
         return bulkResponse;
     }
 
-    @Service
     public BulkResponse removeCorrelatedWorkflows(String correlationId, boolean archiveWorkflow) {
         BulkResponse bulkResponse = new BulkResponse();
         String query = String.format("correlationId=\"%s\"", correlationId);

@@ -198,7 +198,7 @@ public class DeciderService {
             }
 
             if (!pendingTask.getStatus().isSuccessful()) {
-                WorkflowTask workflowTask = pendingTask.getWorkflowTask();
+                //WorkflowTask workflowTask = pendingTask.getWorkflowTask();
                 if (workflowTask == null) {
                     workflowTask = workflow.getWorkflowDefinition()
                         .getTaskByRefName(pendingTask.getReferenceTaskName());

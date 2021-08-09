@@ -61,6 +61,7 @@ public class ExecutionDAOFacade {
     private static final String ARCHIVED_FIELD = "archived";
     private static final String RAW_JSON_FIELD = "rawJSON";
     private static final int MAX_RAW_JSON = 1024 * 32 - 10; // Based on string limit in Elastic Search
+    private int PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE = 60;
 
     private final ExecutionDAO executionDAO;
     private final QueueDAO queueDAO;
@@ -89,7 +90,7 @@ public class ExecutionDAOFacade {
         });
 
         try {
-            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(this::pruneWorkflowsAndTasks, 0, config.pruningIntervalInMinutes(), TimeUnit.MINUTES);
+            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(this::pruneWorkflowsAndTasks, 0, pruningIntervalInMinutes(), TimeUnit.MINUTES);
         } catch (Exception e) {
             LOGGER.error("Error during pruning of workflows and tasks", e);
         }
@@ -256,6 +257,10 @@ public class ExecutionDAOFacade {
 
     public void removeFromPendingWorkflow(String workflowType, String workflowId) {
         executionDAO.removeFromPendingWorkflow(workflowType, workflowId);
+    }
+
+    int pruningIntervalInMinutes() {
+        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_INTERVAL_TIME_MINUTES", Integer.toString(PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE)));
     }
 
     /**

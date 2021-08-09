@@ -1,8 +1,10 @@
 package com.netflix.conductor.contribs.publisher;
 
-import com.netflix.conductor.core.config.Configuration;
+//import com.netflix.conductor.core.config.Configuration;
 
-public interface PublisherConfiguration extends Configuration {
+import com.netflix.conductor.core.config.ConfigProp;
+
+public interface PublisherConfiguration extends ConfigProp {
     String NOTIFICATION_URL_PROPERTY_NAME = "notification.url";
     String NOTIFICATION_URL_DEFAULT_VALUE = "http://bullwinkle.default.svc.cluster.local:7979/v1";
 

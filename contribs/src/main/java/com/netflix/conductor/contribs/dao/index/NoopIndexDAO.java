@@ -138,4 +138,14 @@ public class NoopIndexDAO implements IndexDAO {
     public List<String> searchArchivableWorkflows(String indexName, long archiveTtlDays) {
         return Collections.emptyList();
     }
+
+    @Override
+    public List<String> pruneWorkflows() {
+        return null;
+    }
+
+    @Override
+    public void pruneTasks(List<String> taskIds) {
+
+    }
 }

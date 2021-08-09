@@ -22,6 +22,7 @@ import com.netflix.conductor.core.WorkflowContext;
 import com.netflix.conductor.core.config.ConductorProperties;
 import com.netflix.conductor.core.exception.ApplicationException;
 import com.netflix.conductor.core.exception.ApplicationException.Code;
+import com.netflix.conductor.core.events.ScriptEvaluator;
 import com.netflix.conductor.dao.EventHandlerDAO;
 import com.netflix.conductor.dao.MetadataDAO;
 import com.netflix.conductor.validations.ValidationContext;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import javax.script.ScriptException;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service

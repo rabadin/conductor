@@ -121,7 +121,7 @@ public class WorkflowExecutor {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public WorkflowExecutor(DeciderService deciderService, MetadataDAO metadataDAO, QueueDAO queueDAO,
-        MetadataMapperService metadataMapperService, WorkflowStatusListener workflowStatusListener,TaskStatusListener taskStatusListener
+        MetadataMapperService metadataMapperService, WorkflowStatusListener workflowStatusListener,TaskStatusListener taskStatusListener,
         ExecutionDAOFacade executionDAOFacade, ConductorProperties properties,
         ExecutionLockService executionLockService,
         SystemTaskRegistry systemTaskRegistry,

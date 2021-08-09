@@ -106,7 +106,7 @@ public class TaskSummary {
 	public TaskSummary(Task task) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-    	sdf.setTimeZone(gmt);
+    	sdf.setTimeZone(GMT);
 
     	this.taskId = task.getTaskId();
     	this.taskDefName = task.getTaskDefName();

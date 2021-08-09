@@ -1,7 +1,7 @@
 package com.netflix.conductor.contribs.publisher;
 
 import com.netflix.conductor.common.run.Workflow;
-import com.netflix.conductor.core.execution.WorkflowStatusListener;
+//import com.netflix.conductor.core.execution.WorkflowStatusListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

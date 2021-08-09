@@ -37,13 +37,13 @@ dependencies {
 
     //Conductor
     compile project(':conductor-core')
-    compile project(':conductor-jersey')
+    //compile project(':conductor-jersey')
     compile project(':conductor-redis-persistence')
     compileOnly project(':conductor-mysql-persistence')
     compileOnly project(':conductor-postgres-persistence')
     compileOnly project(':conductor-cassandra-persistence')
     compile project(':conductor-contribs')
-    compile project(':conductor-es5-persistence')
+    //compile project(':conductor-es5-persistence')
     compileOnly project(':conductor-es6-persistence')
     compile project(':conductor-grpc-server')
     compileOnly project(':conductor-zookeeper-lock')
