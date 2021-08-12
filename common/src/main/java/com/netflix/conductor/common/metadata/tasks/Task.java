@@ -406,10 +406,6 @@ public class Task {
         return 0L;
     }
 
-    public void setQueueWaitTime(long t) {
-
-    }
-
     /**
      * @return True if the task has been retried after failure
      */
@@ -450,6 +446,9 @@ public class Task {
         this.pollCount = pollCount;
     }
 
+    public void incrementPollCount() {
+        ++this.pollCount;
+    }
 
     public boolean isCallbackFromWorker() {
         return callbackFromWorker;
