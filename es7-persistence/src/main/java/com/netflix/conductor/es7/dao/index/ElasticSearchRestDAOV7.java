@@ -906,6 +906,16 @@ public class ElasticSearchRestDAOV7 extends ElasticSearchBaseDAO implements Inde
         return workflowIds.getResults();
     }
 
+    @Override
+    public List<String> pruneWorkflows() {
+        return null;
+    }
+
+    @Override
+    public void pruneTasks(List<String> taskIds) {
+
+    }
+
     public List<String> searchRecentRunningWorkflows(int lastModifiedHoursAgoFrom, int lastModifiedHoursAgoTo) {
         DateTime dateTime = new DateTime();
         QueryBuilder q = QueryBuilders.boolQuery()
