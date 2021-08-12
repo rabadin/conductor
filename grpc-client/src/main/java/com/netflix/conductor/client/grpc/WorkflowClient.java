@@ -111,7 +111,7 @@ public class WorkflowClient extends ClientBase {
         Preconditions.checkArgument(StringUtils.isNotBlank(workflowId), "Workflow id cannot be blank");
         stub.removeWorkflow(
             WorkflowServicePb.RemoveWorkflowRequest.newBuilder()
-                .setWorkflodId(workflowId)
+                .setWorkflowId(workflowId)
                 .setArchiveWorkflow(archiveWorkflow)
                 .build()
         );
