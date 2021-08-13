@@ -20,6 +20,7 @@ import com.netflix.conductor.common.metadata.workflow.WorkflowTask;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.core.config.ConductorProperties;
 import com.netflix.conductor.core.execution.DeciderService;
+import com.netflix.conductor.core.execution.TaskStatusListener;
 import com.netflix.conductor.core.execution.WorkflowExecutor;
 import com.netflix.conductor.core.listener.WorkflowStatusListener;
 import com.netflix.conductor.core.metadata.MetadataMapperService;
@@ -57,6 +58,7 @@ public class TestDoWhile {
     QueueDAO queueDAO;
     MetadataMapperService metadataMapperService;
     WorkflowStatusListener workflowStatusListener;
+    TaskStatusListener taskStatusListener;
     ExecutionDAOFacade executionDAOFacade;
     ExecutionLockService executionLockService;
     ConductorProperties properties;
@@ -80,6 +82,7 @@ public class TestDoWhile {
         parametersUtils = mock(ParametersUtils.class);
         metadataMapperService = mock(MetadataMapperService.class);
         workflowStatusListener = mock(WorkflowStatusListener.class);
+        taskStatusListener = mock(TaskStatusListener.class);
         executionDAOFacade = mock(ExecutionDAOFacade.class);
         executionLockService = mock(ExecutionLockService.class);
         properties = mock(ConductorProperties.class);
@@ -88,7 +91,7 @@ public class TestDoWhile {
         when(properties.getTaskExecutionPostponeDuration()).thenReturn(Duration.ofSeconds(60));
         when(properties.getWorkflowOffsetTimeout()).thenReturn(Duration.ofSeconds(30));
         provider = spy(new WorkflowExecutor(deciderService, metadataDAO, queueDAO, metadataMapperService,
-            workflowStatusListener, executionDAOFacade, properties, executionLockService, systemTaskRegistry, parametersUtils));
+            workflowStatusListener, taskStatusListener, executionDAOFacade, properties, executionLockService, systemTaskRegistry, parametersUtils));
         WorkflowTask loopWorkflowTask1 = new WorkflowTask();
         loopWorkflowTask1.setTaskReferenceName("task1");
         loopWorkflowTask1.setName("task1");

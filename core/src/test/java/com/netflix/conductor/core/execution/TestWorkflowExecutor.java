@@ -136,6 +136,7 @@ public class TestWorkflowExecutor {
     private QueueDAO queueDAO;
     private WorkflowStatusListener workflowStatusListener;
     private ExecutionLockService executionLockService;
+    private TaskStatusListener taskStatusListener;
 
     @Configuration
     public static class TestConfiguration {
@@ -191,6 +192,7 @@ public class TestWorkflowExecutor {
         metadataDAO = mock(MetadataDAO.class);
         queueDAO = mock(QueueDAO.class);
         workflowStatusListener = mock(WorkflowStatusListener.class);
+        taskStatusListener = mock(TaskStatusListener.class);
         ExternalPayloadStorageUtils externalPayloadStorageUtils = mock(ExternalPayloadStorageUtils.class);
         executionLockService = mock(ExecutionLockService.class);
         ParametersUtils parametersUtils = new ParametersUtils(objectMapper);
@@ -218,7 +220,7 @@ public class TestWorkflowExecutor {
         when(properties.getWorkflowOffsetTimeout()).thenReturn(Duration.ofSeconds(30));
 
         workflowExecutor = new WorkflowExecutor(deciderService, metadataDAO, queueDAO, metadataMapperService,
-            workflowStatusListener, executionDAOFacade, properties, executionLockService, systemTaskRegistry,
+            workflowStatusListener, taskStatusListener,executionDAOFacade, properties, executionLockService, systemTaskRegistry,
             parametersUtils);
     }
 
