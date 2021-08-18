@@ -763,6 +763,11 @@ public class ElasticSearchDAOV6 extends ElasticSearchBaseDAO implements IndexDAO
         throw new UnsupportedOperationException("This method is not currently implemented");
     }
 
+    @Override
+    public List<String> searchRecentRunningWorkflows(int lastModifiedHoursAgoFrom, int lastModifiedHoursAgoTo) {
+        return null;
+    }
+
     private UpdateRequest buildUpdateRequest(String id, byte[] doc, String indexName, String docType) {
         UpdateRequest req = new UpdateRequest(indexName, docType, id);
         req.doc(doc, XContentType.JSON);

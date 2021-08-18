@@ -148,4 +148,9 @@ public class NoopIndexDAO implements IndexDAO {
     public void pruneTasks(List<String> taskIds) {
 
     }
+
+    @Override
+    public List<String> searchRecentRunningWorkflows(int lastModifiedHoursAgoFrom, int lastModifiedHoursAgoTo) {
+        return null;
+    }
 }

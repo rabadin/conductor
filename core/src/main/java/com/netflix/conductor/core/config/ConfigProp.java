@@ -4,6 +4,11 @@ import java.util.Optional;
 
 public interface ConfigProp {
 
+    String TASKEXECLOG_INDEXING_ENABLED_PROPERTY_NAME = "workflow.taskExecLog.indexing.enabled";
+    boolean TASKEXECLOG_INDEXING_ENABLED_DEFAULT_VALUE = true;
+    int PRUNING_DAYS_TO_KEEP_DEFAULT_VALUE = 28;   // 4 weeks
+    int PRUNING_BATCH_SIZE_DEFAULT_VALUE = 2000;
+
     /**
      * @param key         Name of the property
      * @param defaultValue Default value when not specified
@@ -52,5 +57,28 @@ public interface ConfigProp {
             return defaultValue;
         }
         return Boolean.parseBoolean(value.trim());
+    }
+
+    /**
+     * @return if true(default), enables task execution log indexing
+     */
+    default boolean isTaskExecLogIndexingEnabled() {
+        return getBooleanProperty(TASKEXECLOG_INDEXING_ENABLED_PROPERTY_NAME, TASKEXECLOG_INDEXING_ENABLED_DEFAULT_VALUE);
+    }
+
+    /**
+     * @return number of days to keep workflows that are not 'Completed'
+     */
+    default int getPruningDaysToKeep()
+    {
+        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_DAYS_TO_KEEP", Integer.toString(PRUNING_DAYS_TO_KEEP_DEFAULT_VALUE)));
+    }
+
+    /**
+     * @return the number of records (wprkflows or tasks) to prune
+     */
+    default int getPruningBatchSize()
+    {
+        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_BATCH_SIZE", Integer.toString(PRUNING_BATCH_SIZE_DEFAULT_VALUE)));
     }
 }

@@ -69,4 +69,5 @@ ext {
     revGuiceMultiBindings = '4.1.0'
     revJUnit = '4.12'
     revMockito = '3.1.0'
+    revElasticSearch5 = '5.6.8'
 }

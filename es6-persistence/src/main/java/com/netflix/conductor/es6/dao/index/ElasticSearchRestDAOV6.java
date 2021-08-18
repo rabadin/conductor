@@ -898,6 +898,11 @@ public class ElasticSearchRestDAOV6 extends ElasticSearchBaseDAO implements Inde
         throw new UnsupportedOperationException("This method is not currently implemented");
     }
 
+    @Override
+    public List<String> searchRecentRunningWorkflows(int lastModifiedHoursAgoFrom, int lastModifiedHoursAgoTo) {
+        return null;
+    }
+
     private void indexObject(final String index, final String docType, final Object doc) {
         indexObject(index, docType, null, doc);
     }
