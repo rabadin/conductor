@@ -16,6 +16,8 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.netflix.conductor.common.metadata.tasks.TaskType;
 import com.netflix.conductor.common.utils.ExternalPayloadStorage;
 import com.netflix.conductor.core.events.EventQueueProvider;
+import com.netflix.conductor.core.execution.TaskStatusListener;
+import com.netflix.conductor.core.execution.TaskStatusListenerStub;
 import com.netflix.conductor.core.execution.mapper.TaskMapper;
 import com.netflix.conductor.core.listener.WorkflowStatusListener;
 import com.netflix.conductor.core.listener.WorkflowStatusListenerStub;
@@ -63,6 +65,12 @@ public class ConductorCoreConfiguration {
     @Bean
     public WorkflowStatusListener workflowStatusListener() {
         return new WorkflowStatusListenerStub();
+    }
+
+    @ConditionalOnProperty(name = "conductor.task-status-listener.type", havingValue = "stub", matchIfMissing = true)
+    @Bean
+    public TaskStatusListener taskStatusListener() {
+        return new TaskStatusListenerStub();
     }
 
     @Bean

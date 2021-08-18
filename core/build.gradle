@@ -53,7 +53,7 @@ dependencies {
     testImplementation "org.codehaus.groovy:groovy-all:${revGroovy}"
     testImplementation "org.spockframework:spock-core:${revSpock}"
     testImplementation "org.spockframework:spock-spring:${revSpock}"
-    compile "com.google.inject:guice:4.1.0"
+    compile "com.google.inject:guice:${revGuice}"
 }
 
 test {

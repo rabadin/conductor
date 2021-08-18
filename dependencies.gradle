@@ -61,4 +61,12 @@ ext {
     revSpock = '1.3-groovy-2.5'
     revSpotifyCompletableFutures = '0.3.3'
     revTestContainer = '1.15.3'
+    revElasticSearch5 = '5.6.8'
+    revLog4jApi = '2.9.1'
+    revLog4jCore = '2.9.1'
+    revSlf4jlog4j = '1.8.0-alpha1'
+    revGuice = '4.1.0'
+    revGuiceMultiBindings = '4.1.0'
+    revJUnit = '4.12'
+    revMockito = '3.1.0'
 }
