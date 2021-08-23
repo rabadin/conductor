@@ -116,7 +116,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.datastax.cassandra:cassandra-driver-core",
                 "com.github.rholder:guava-retrying",
@@ -468,7 +468,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.datastax.cassandra:cassandra-driver-core",
                 "com.github.rholder:guava-retrying",
@@ -820,7 +820,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.datastax.cassandra:cassandra-driver-core",
                 "com.github.rholder:guava-retrying",
@@ -1235,7 +1235,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.datastax.cassandra:cassandra-driver-core",
                 "com.github.rholder:guava-retrying",
@@ -1587,7 +1587,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.datastax.cassandra:cassandra-driver-core",
                 "com.github.rholder:guava-retrying",

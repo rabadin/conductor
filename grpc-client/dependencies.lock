@@ -101,7 +101,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "20.0",
+            "locked": "30.0-jre-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -507,7 +507,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "20.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -913,7 +913,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "20.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -1382,7 +1382,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "20.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -1788,7 +1788,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "20.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -2194,7 +2194,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "20.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -2632,7 +2632,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "20.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -3070,7 +3070,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "20.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -3508,7 +3508,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "20.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
