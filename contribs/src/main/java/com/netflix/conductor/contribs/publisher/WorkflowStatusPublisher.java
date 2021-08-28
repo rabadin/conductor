@@ -1,7 +1,7 @@
 package com.netflix.conductor.contribs.publisher;
 
 import com.netflix.conductor.common.run.Workflow;
-//import com.netflix.conductor.core.execution.WorkflowStatusListener;
+import com.netflix.conductor.core.listener.WorkflowStatusListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,6 +80,7 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
 
     @Override
     public void onWorkflowCompleted(Workflow workflow) {
+        LOGGER.info("workflows completion {} {}",  workflow.getWorkflowId(), workflow.getWorkflowName());
         try {
             blockingQueue.put(workflow);
         } catch (Exception e){
@@ -90,6 +91,7 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
 
     @Override
     public void onWorkflowTerminated(Workflow workflow) {
+        LOGGER.info("workflows termination {} {}",  workflow.getWorkflowId(), workflow.getWorkflowName());
         try {
             blockingQueue.put(workflow);
         } catch (Exception e){
@@ -98,7 +100,19 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
         }
     }
 
+    @Override
+    public void onWorkflowCompletedIfEnabled(Workflow workflow) {
+        onWorkflowTerminated(workflow);
+
+    }
+
+    @Override
+    public  void onWorkflowTerminatedIfEnabled(Workflow workflow) {
+        onWorkflowTerminated(workflow);
+    }
+
      private void publishWorkflowNotification(WorkflowNotification workflowNotification) throws IOException {
+        LOGGER.info("workflows {} publish is successful.", workflowNotification.getWorkflowId() );
         String jsonWorkflow = workflowNotification.toJsonString();
         rcm.postNotification(
                 RestClientManager.NotificationType.WORKFLOW,

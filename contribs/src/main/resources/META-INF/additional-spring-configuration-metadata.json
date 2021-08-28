@@ -38,6 +38,11 @@
     {
       "name": "conductor.workflow-status-listener.type",
       "type": "java.lang.String",
+      "description": "The implementation of the task status listener to be used."
+    },
+    {
+      "name": "conductor.task-status-listener.type",
+      "type": "java.lang.String",
       "description": "The implementation of the workflow status listener to be used."
     },
     {
@@ -90,6 +95,23 @@
         },
         {
           "value": "queue_publisher",
+          "description": "Use the publisher implementation which publishes a message to the underlying queue implementation upon termination or completion as the workflow status listener."
+        },
+        {
+          "value": "workflow_publisher",
+          "description": "Use the publisher implementation which publishes a workflow termination or completion as the workflow status listener."
+        }
+      ]
+    },
+    {
+      "name": "conductor.task-status-listener.type",
+      "values": [
+        {
+          "value": "stub",
+          "description": "Use the no-op implementation of the task status listener."
+        },
+        {
+          "value": "task_publisher",
           "description": "Use the publisher implementation which publishes a message to the underlying queue implementation upon termination or completion as the workflow status listener."
         }
       ]

@@ -103,8 +103,8 @@ public class TaskDef extends Auditable {
     private String executionNameSpace;
 
     @ProtoField(id = 18)
-    @OwnerEmailMandatoryConstraint
-    @Email(message = "ownerEmail should be valid email address")
+    //@OwnerEmailMandatoryConstraint
+    //@Email(message = "ownerEmail should be valid email address")
     private String ownerEmail;
 
     @ProtoField(id = 19)

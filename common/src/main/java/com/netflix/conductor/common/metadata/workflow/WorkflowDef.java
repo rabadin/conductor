@@ -79,8 +79,8 @@ public class WorkflowDef extends Auditable {
     private boolean workflowStatusListenerEnabled = false;
 
     @ProtoField(id = 11)
-    @OwnerEmailMandatoryConstraint
-    @Email(message = "ownerEmail should be valid email address")
+    //@OwnerEmailMandatoryConstraint
+    //@Email(message = "ownerEmail should be valid email address")
     private String ownerEmail;
 
     @ProtoField(id = 12)

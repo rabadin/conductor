@@ -17,6 +17,7 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Singleton;
 import javax.net.ssl.SSLException;
@@ -26,7 +27,9 @@ import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
-@Singleton
+//@Singleton
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+@Component
 public class RestClientManager {
     private static final Logger logger = LoggerFactory.getLogger(RestClientManager.class);
     private PublisherConfiguration config;
@@ -39,7 +42,7 @@ public class RestClientManager {
         WORKFLOW
     };
 
-    @Inject
+    //@Inject
     public RestClientManager(PublisherConfiguration config){
         this.config = config;
         this.client = prepareClient();
