@@ -154,7 +154,7 @@ public class ConductorProperties {
     /**
      * Used to control the validation for owner email field as mandatory within workflow and task definitions.
      */
-    private boolean ownerEmailMandatory = true;
+    private boolean ownerEmailMandatory = false;
 
     /**
      * The number of threads to be usde in Scheduler used for polling events from multiple event queues. By default, a
