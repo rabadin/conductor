@@ -818,6 +818,9 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         //Prune all workflows older than 14 days (or) all archived & completed workflows no matter what
         int daysForDebug = 14;
         int daysWaitingAllowed = 181;
+        // In Production environment 'status' field is mapped differently compared to other environments.  To make the
+        // query work, we have to add '.keyword' to status fields.  This is a workaround to support all environments.
+        // Permanent fix is to sync all the environments with the same field mappings.
         QueryBuilder wfQuery = QueryBuilders.boolQuery()
                                     .should(QueryBuilders.boolQuery()
                                         .should(QueryBuilders.termQuery("status", "COMPLETED"))
