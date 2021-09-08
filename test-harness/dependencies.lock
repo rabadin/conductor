@@ -204,7 +204,7 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
@@ -219,7 +219,7 @@
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
@@ -862,7 +862,7 @@
             ]
         },
         "com.thoughtworks.xstream:xstream": {
-            "locked": "1.4.10",
+            "locked": "1.4.18",
             "transitive": [
                 "com.netflix.eureka:eureka-client"
             ]
@@ -1005,7 +1005,7 @@
             ]
         },
         "io.netty:netty": {
-            "locked": "3.10.6.Final",
+            "locked": "4.1.67.Final",
             "transitive": [
                 "org.elasticsearch.plugin:transport-netty3-client"
             ]
@@ -1411,7 +1411,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core",
                 "com.netflix.dyno:dyno-contrib",
@@ -1999,7 +1999,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.elasticsearch:elasticsearch"
@@ -2180,7 +2180,7 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
@@ -2195,7 +2195,7 @@
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
@@ -2838,7 +2838,7 @@
             ]
         },
         "com.thoughtworks.xstream:xstream": {
-            "locked": "1.4.10",
+            "locked": "1.4.18",
             "transitive": [
                 "com.netflix.eureka:eureka-client"
             ]
@@ -2981,7 +2981,7 @@
             ]
         },
         "io.netty:netty": {
-            "locked": "3.10.6.Final",
+            "locked": "4.1.67.Final",
             "transitive": [
                 "org.elasticsearch.plugin:transport-netty3-client"
             ]
@@ -3387,7 +3387,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core",
                 "com.netflix.dyno:dyno-contrib",
@@ -3975,7 +3975,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.elasticsearch:elasticsearch"
@@ -4156,7 +4156,7 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
@@ -4171,7 +4171,7 @@
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
@@ -4814,7 +4814,7 @@
             ]
         },
         "com.thoughtworks.xstream:xstream": {
-            "locked": "1.4.10",
+            "locked": "1.4.18",
             "transitive": [
                 "com.netflix.eureka:eureka-client"
             ]
@@ -4957,7 +4957,7 @@
             ]
         },
         "io.netty:netty": {
-            "locked": "3.10.6.Final",
+            "locked": "4.1.67.Final",
             "transitive": [
                 "org.elasticsearch.plugin:transport-netty3-client"
             ]
@@ -5363,7 +5363,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core",
                 "com.netflix.dyno:dyno-contrib",
@@ -5951,7 +5951,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.elasticsearch:elasticsearch"
@@ -6132,7 +6132,7 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
@@ -6147,7 +6147,7 @@
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
@@ -6790,7 +6790,7 @@
             ]
         },
         "com.thoughtworks.xstream:xstream": {
-            "locked": "1.4.10",
+            "locked": "1.4.18",
             "transitive": [
                 "com.netflix.eureka:eureka-client"
             ]
@@ -6933,7 +6933,7 @@
             ]
         },
         "io.netty:netty": {
-            "locked": "3.10.6.Final",
+            "locked": "4.1.67.Final",
             "transitive": [
                 "org.elasticsearch.plugin:transport-netty3-client"
             ]
@@ -7339,7 +7339,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core",
                 "com.netflix.dyno:dyno-contrib",
@@ -7927,7 +7927,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.elasticsearch:elasticsearch"

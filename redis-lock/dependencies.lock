@@ -91,7 +91,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -384,7 +384,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
             ]
@@ -488,7 +488,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -781,7 +781,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
             ]
@@ -885,7 +885,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -1178,7 +1178,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
             ]
@@ -1345,7 +1345,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -1638,7 +1638,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
             ]
@@ -1742,7 +1742,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -2035,7 +2035,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
             ]
@@ -2143,7 +2143,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.kstyrc:embedded-redis",
                 "com.github.rholder:guava-retrying",
@@ -2476,7 +2476,7 @@
             "requested": "1.8.0-alpha1"
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
             ]
@@ -2584,7 +2584,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.kstyrc:embedded-redis",
                 "com.github.rholder:guava-retrying",
@@ -2917,7 +2917,7 @@
             "requested": "1.8.0-alpha1"
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
             ]
@@ -3025,7 +3025,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.kstyrc:embedded-redis",
                 "com.github.rholder:guava-retrying",
@@ -3358,7 +3358,7 @@
             "requested": "1.8.0-alpha1"
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
             ]
@@ -3466,7 +3466,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.kstyrc:embedded-redis",
                 "com.github.rholder:guava-retrying",
@@ -3799,7 +3799,7 @@
             "requested": "1.8.0-alpha1"
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.23",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
             ]

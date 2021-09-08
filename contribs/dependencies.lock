@@ -83,38 +83,38 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core",
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
@@ -151,7 +151,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -356,7 +356,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core"
             ]
@@ -538,38 +538,38 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core",
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
@@ -606,7 +606,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -812,7 +812,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core"
             ]
@@ -1000,38 +1000,38 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core",
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
@@ -1068,7 +1068,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -1273,7 +1273,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core"
             ]
@@ -1518,38 +1518,38 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core",
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
@@ -1586,7 +1586,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -1791,7 +1791,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core"
             ]
@@ -1973,38 +1973,38 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core",
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
@@ -2041,7 +2041,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -2246,7 +2246,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core"
             ]
@@ -2428,38 +2428,38 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core",
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
@@ -2496,7 +2496,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -2729,7 +2729,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core"
             ]
@@ -2969,38 +2969,38 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core",
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
@@ -3037,7 +3037,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -3270,7 +3270,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core"
             ]
@@ -3510,38 +3510,38 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core",
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
@@ -3578,7 +3578,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -3811,7 +3811,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core"
             ]
@@ -4051,38 +4051,38 @@
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-xml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core",
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.datatype:jackson-datatype-joda": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-core"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
             ]
         },
         "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "io.swagger:swagger-jaxrs"
             ]
         },
         "com.fasterxml.jackson.module:jackson-module-jaxb-annotations": {
-            "locked": "2.4.5",
+            "locked": "2.11.4",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-xml",
                 "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider"
@@ -4119,7 +4119,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -4352,7 +4352,7 @@
             ]
         },
         "org.apache.httpcomponents:httpclient": {
-            "locked": "4.5.9",
+            "locked": "4.5.13",
             "transitive": [
                 "com.amazonaws:aws-java-sdk-core"
             ]
