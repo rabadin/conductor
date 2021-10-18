@@ -198,12 +198,6 @@ public class DeciderService {
             }
 
             if (!pendingTask.getStatus().isSuccessful()) {
-                //WorkflowTask workflowTask = pendingTask.getWorkflowTask();
-                if (workflowTask == null) {
-                    workflowTask = workflow.getWorkflowDefinition()
-                        .getTaskByRefName(pendingTask.getReferenceTaskName());
-                }
-
                 Optional<Task> retryTask = retry(taskDefinition.orElse(null), workflowTask, pendingTask, workflow);
                 if (retryTask.isPresent()) {
                     tasksToBeScheduled.put(retryTask.get().getReferenceTaskName(), retryTask.get());

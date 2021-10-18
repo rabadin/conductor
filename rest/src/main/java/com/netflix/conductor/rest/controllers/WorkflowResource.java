@@ -227,4 +227,11 @@ public class WorkflowResource {
         @RequestParam("operation") String operation, @RequestParam("payloadType") String payloadType) {
         return workflowService.getExternalStorageLocation(path, operation, payloadType);
     }
+
+    @DeleteMapping("/{workflowId}/archiveonly")
+    @Operation(summary = "Archive workflow but not delete in Redis")
+    public void archiveOnly(@PathVariable("workflowId") String workflowId,
+                            @RequestParam(value="retainState", defaultValue="true") boolean retainState) {
+        workflowService.archiveWorkflow(workflowId, retainState);
+    }
 }
