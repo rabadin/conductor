@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface ConfigProp {
 
-    String TASKEXECLOG_INDEXING_ENABLED_PROPERTY_NAME = "workflow.taskExecLog.indexing.enabled";
+    String TASKEXECLOG_INDEXING_ENABLED_PROPERTY_NAME = "conductor.app.taskExecLogIndexingEnabled";
     boolean TASKEXECLOG_INDEXING_ENABLED_DEFAULT_VALUE = true;
     int PRUNING_DAYS_TO_KEEP_DEFAULT_VALUE = 28;   // 4 weeks
     int PRUNING_BATCH_SIZE_DEFAULT_VALUE = 2000;
