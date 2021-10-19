@@ -818,21 +818,31 @@ public class ElasticSearchRestDAOV5 implements IndexDAO {
         //Prune all workflows older than 14 days (or) all archived & completed workflows no matter what
         int daysForDebug = 14;
         int daysWaitingAllowed = 181;
+        // In Production environment 'status' field is mapped differently compared to other environments.  To make the
+        // query work, we have to add '.keyword' to status fields.  This is a workaround to support all environments.
+        // Permanent fix is to sync all the environments with the same field mappings.
         QueryBuilder wfQuery = QueryBuilders.boolQuery()
                                     .should(QueryBuilders.boolQuery()
                                         .should(QueryBuilders.termQuery("status", "COMPLETED"))
                                         .should(QueryBuilders.termQuery("status", "TIMED_OUT"))
                                         .should(QueryBuilders.termQuery("status", "TERMINATED"))
+                                        .should(QueryBuilders.termQuery("status.keyword", "COMPLETED"))
+                                        .should(QueryBuilders.termQuery("status.keyword", "TIMED_OUT"))
+                                        .should(QueryBuilders.termQuery("status.keyword", "TERMINATED"))
                                         .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysForDebug)))
                                         .minimumShouldMatch(1)
                                     )
                                     .should(QueryBuilders.boolQuery()
-                                        .must(QueryBuilders.termQuery("status", "FAILED"))
+                                        .should(QueryBuilders.termQuery("status", "FAILED"))
+                                        .should(QueryBuilders.termQuery("status.keyword", "FAILED"))
                                         .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeep)))
+                                        .minimumShouldMatch(1)
                                     )
                                     .should(QueryBuilders.boolQuery()
-                                        .must(QueryBuilders.termQuery("status", "RUNNING"))
+                                        .should(QueryBuilders.termQuery("status", "RUNNING"))
+                                        .should(QueryBuilders.termQuery("status.keyword", "RUNNING"))
                                         .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysWaitingAllowed)))
+                                        .minimumShouldMatch(1)
                                     );
 
         int batchSize = config.getPruningBatchSize();
