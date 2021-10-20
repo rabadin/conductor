@@ -406,7 +406,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.26",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.springframework.boot:spring-boot-starter"
@@ -1020,7 +1020,7 @@
             ]
         },
         "com.thoughtworks.xstream:xstream": {
-            "locked": "1.4.10",
+            "locked": "1.4.18",
             "transitive": [
                 "com.netflix.eureka:eureka-client"
             ]
@@ -2147,7 +2147,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.26",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.elasticsearch:elasticsearch-x-content",
@@ -2794,7 +2794,7 @@
             ]
         },
         "com.thoughtworks.xstream:xstream": {
-            "locked": "1.4.10",
+            "locked": "1.4.18",
             "transitive": [
                 "com.netflix.eureka:eureka-client"
             ]
@@ -3921,7 +3921,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.26",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.elasticsearch:elasticsearch-x-content",
@@ -4050,7 +4050,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "29.0-android",
+            "locked": "30.0-jre",
             "transitive": [
                 "io.grpc:grpc-stub"
             ]
@@ -4661,7 +4661,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.26",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.springframework.boot:spring-boot-starter"
@@ -5279,7 +5279,7 @@
             ]
         },
         "com.thoughtworks.xstream:xstream": {
-            "locked": "1.4.10",
+            "locked": "1.4.18",
             "transitive": [
                 "com.netflix.eureka:eureka-client"
             ]
@@ -6606,7 +6606,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.26",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.elasticsearch:elasticsearch-x-content",

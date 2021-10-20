@@ -27,7 +27,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.netflix.servo:servo-core"
             ]
@@ -285,7 +285,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.netflix.servo:servo-core"
@@ -425,7 +425,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.netflix.servo:servo-core"
             ]
@@ -896,7 +896,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.netflix.servo:servo-core"

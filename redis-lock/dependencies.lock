@@ -253,7 +253,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.26",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.redisson:redisson",
@@ -313,7 +313,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.netflix.servo:servo-core"
@@ -590,7 +590,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.26",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.redisson:redisson"
@@ -629,7 +629,7 @@
             "locked": "0.6"
         },
         "com.google.guava:guava": {
-            "locked": "18.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.kstyrc:embedded-redis"
             ]
@@ -1087,7 +1087,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.26",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.redisson:redisson",
@@ -1150,7 +1150,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.kstyrc:embedded-redis",
                 "com.github.rholder:guava-retrying",
@@ -1715,7 +1715,7 @@
             ]
         },
         "org.yaml:snakeyaml": {
-            "locked": "1.26",
+            "locked": "1.29",
             "transitive": [
                 "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
                 "org.redisson:redisson",

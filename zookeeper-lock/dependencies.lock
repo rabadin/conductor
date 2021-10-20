@@ -6,7 +6,7 @@
     },
     "compileClasspath": {
         "com.google.guava:guava": {
-            "locked": "14.0.1",
+            "locked": "30.0-jre",
             "transitive": [
                 "org.apache.curator:curator-client",
                 "org.apache.curator:curator-framework",
@@ -208,7 +208,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.netflix.servo:servo-core",
@@ -411,7 +411,7 @@
     },
     "testCompileClasspath": {
         "com.google.guava:guava": {
-            "locked": "14.0.1",
+            "locked": "30.0-jre",
             "transitive": [
                 "org.apache.curator:curator-client",
                 "org.apache.curator:curator-framework",
@@ -861,7 +861,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.netflix.servo:servo-core",

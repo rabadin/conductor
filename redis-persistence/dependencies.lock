@@ -43,7 +43,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.google.inject:guice"
             ]
@@ -450,7 +450,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -645,7 +645,7 @@
             ]
         },
         "com.thoughtworks.xstream:xstream": {
-            "locked": "1.4.10",
+            "locked": "1.4.18",
             "transitive": [
                 "com.netflix.eureka:eureka-client"
             ]
@@ -949,7 +949,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.google.inject:guice"
             ]
@@ -1587,7 +1587,7 @@
             ]
         },
         "com.google.guava:guava": {
-            "locked": "19.0",
+            "locked": "30.0-jre",
             "transitive": [
                 "com.github.rholder:guava-retrying",
                 "com.google.inject:guice",
@@ -1783,7 +1783,7 @@
             ]
         },
         "com.thoughtworks.xstream:xstream": {
-            "locked": "1.4.10",
+            "locked": "1.4.18",
             "transitive": [
                 "com.netflix.eureka:eureka-client"
             ]
