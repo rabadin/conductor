@@ -908,12 +908,175 @@ public class ElasticSearchRestDAOV7 extends ElasticSearchBaseDAO implements Inde
 
     @Override
     public List<String> pruneWorkflows() {
-        return null;
+        int daysToKeep = properties.getPruningDaysToKeep();
+        DateTime dateTime = new DateTime();
+        //Prune all workflows older than 14 days (or) all archived & completed workflows no matter what
+        int daysForDebug = 14;
+        int daysWaitingAllowed = 181;
+        // In Production environment 'status' field is mapped differently compared to other environments.  To make the
+        // query work, we have to add '.keyword' to status fields.  This is a workaround to support all environments.
+        // Permanent fix is to sync all the environments with the same field mappings.
+        QueryBuilder wfQuery = QueryBuilders.boolQuery()
+                .should(QueryBuilders.boolQuery()
+                        .should(QueryBuilders.termQuery("status", "COMPLETED"))
+                        .should(QueryBuilders.termQuery("status", "TIMED_OUT"))
+                        .should(QueryBuilders.termQuery("status", "TERMINATED"))
+                        .should(QueryBuilders.termQuery("status.keyword", "COMPLETED"))
+                        .should(QueryBuilders.termQuery("status.keyword", "TIMED_OUT"))
+                        .should(QueryBuilders.termQuery("status.keyword", "TERMINATED"))
+                        .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysForDebug)))
+                        .minimumShouldMatch(1)
+                )
+                .should(QueryBuilders.boolQuery()
+                        .should(QueryBuilders.termQuery("status", "FAILED"))
+                        .should(QueryBuilders.termQuery("status.keyword", "FAILED"))
+                        .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysToKeep)))
+                        .minimumShouldMatch(1)
+                )
+                .should(QueryBuilders.boolQuery()
+                        .should(QueryBuilders.termQuery("status", "RUNNING"))
+                        .should(QueryBuilders.termQuery("status.keyword", "RUNNING"))
+                        .must(QueryBuilders.rangeQuery("updateTime").lt(dateTime.minusDays(daysWaitingAllowed)))
+                        .minimumShouldMatch(1)
+                );
+
+        int batchSize = properties.getPruningBatchSize();
+        List<String> workflowIds = pruneDocs(workflowIndexName , wfQuery, WORKFLOW_DOC_TYPE, batchSize, Collections.singletonList("endTime:ASC"));
+
+        // If needed, this can be made optional by passing it as argument
+        boolean includeTasks = true;
+        if (includeTasks){
+            //Delete tasks that belonged to the pruned workflows
+            int pageSize = 100;
+            int taskBatchSize = 4000;
+            List<List<String>> pages = getPages(workflowIds, pageSize);
+            for (List<String> page: pages) {
+                QueryBuilder taskQuery = QueryBuilders.termsQuery("workflowId", page);
+                pruneDocs(taskIndexName, taskQuery, TASK_DOC_TYPE, taskBatchSize, null);
+            }
+        }
+        return workflowIds;
     }
 
     @Override
     public void pruneTasks(List<String> taskIds) {
 
+        String docType = TASK_DOC_TYPE;
+        // Prune tasks that that belonged to deleted workflows
+        if (taskIds.size() > 0) {
+            BulkRequest bulkRequest = new BulkRequest();
+            for (String taskId:taskIds) {
+                bulkRequest.add(new DeleteRequest(taskIndexName, docType, taskId));
+            }
+            pruneBulkRecords(bulkRequest, docType, taskIds.size(), 0);
+        }
+    }
+
+    /**
+     * Converts a list into a paged list based on the pagesize.
+     * @param c list of workflow ids.
+     * @param pageSize
+     * @return paged list of workflow ids.
+     * ** */
+    public static <T> List<List<T>> getPages(List<T> c, Integer pageSize) {
+        if (c == null)
+            return Collections.emptyList();
+        List<T> list = new ArrayList<T>(c);
+        if (pageSize == null || pageSize <= 0 || pageSize > list.size())
+            pageSize = list.size();
+        int numPages = (int) Math.ceil((double)list.size() / (double)pageSize);
+        List<List<T>> pages = new ArrayList<List<T>>(numPages);
+        for (int pageNum = 0; pageNum < numPages;)
+            pages.add(list.subList(pageNum * pageSize, Math.min(++pageNum * pageSize, list.size())));
+        return pages;
+    }
+
+    /**
+     * prune records as a bulk request.  This is efficient compared to individual doc deletion.
+     * @param indexName ES index.
+     * @param q search query.
+     * @param docType Either workflow or task doctype.
+     * @param batchSize pruning batch size.
+     * @param sortOptions docs will be sorted before search.
+     * @return list of workflow Ids that were pruned.
+     * ** */
+    private List<String> pruneDocs(String indexName, QueryBuilder q, String docType, int batchSize, List<String> sortOptions) {
+        //SearchResult<String> docIds;
+        List<String> docIds = new LinkedList<>();
+        long totalDocs = 0;
+        long searchTimeinMills = 0;
+        try {
+            SearchResponse response = getSearchResponse(indexName, q, 0, batchSize, sortOptions, docType, false);
+            totalDocs = response.getHits().getTotalHits().value;
+            searchTimeinMills = response.getTook().getMillis();
+
+            if (totalDocs > 0) {
+                BulkRequest bulkRequest = new BulkRequest();
+                response.getHits().forEach(hit -> {
+                    bulkRequest.add(new DeleteRequest(indexName, docType, hit.getId()));
+                    docIds.add(hit.getId());
+                });
+                pruneBulkRecords(bulkRequest, docType, totalDocs, searchTimeinMills);
+            }
+            else {
+                logger.info("No ES records to prune for '{}'", docType);
+            }
+        } catch (IOException e) {
+            logger.error("Unable to communicate with ES to prune '{}' due to {}", docType, e.getMessage());
+        }
+
+        return docIds;
+    }
+
+    /**
+     * prune records as a bulk request.  This is efficient compared to individual doc deletion.
+     * @param bulkRequest ES request object containing doc Ids.
+     * @param docType Either workflow or task doctype.
+     * @param totalDocs total documents that have to be pruned.
+     * @param searchTimeinMills time taken to search the docs that will be pruned.
+     ** */
+    private void pruneBulkRecords(BulkRequest bulkRequest, String docType, long totalDocs, long searchTimeinMills) {
+        long pruneTimeinMills = 0;
+        long prunedDocs = 0;
+        try {
+            BulkResponse bulkResponse = elasticSearchClient.bulk(bulkRequest,RequestOptions.DEFAULT);
+            pruneTimeinMills = bulkResponse.getTook().getMillis();
+            prunedDocs = bulkResponse.getItems().length;
+            logger.info("ES pruning completed for '{}': Total {}, Pruned {}, SearchTime {} ms, PruningTime {} ms", docType, totalDocs, prunedDocs, searchTimeinMills, pruneTimeinMills);
+        } catch (IOException e) {
+            logger.error("Failed to prune '{}' from ES index due to {}", docType, e.getMessage());
+        } catch (Exception e) {
+            logger.error("Failed to process bulk pruning response for '{}' from index due to {}", docType, e.getMessage());
+        }
+    }
+
+    private SearchResponse getSearchResponse(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType, boolean includeDocs) throws IOException {
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(queryBuilder);
+        searchSourceBuilder.from(start);
+        if (size > 0) searchSourceBuilder.size(size);
+        searchSourceBuilder.fetchSource(includeDocs);
+
+        if (sortOptions != null && !sortOptions.isEmpty()) {
+
+            for (String sortOption : sortOptions) {
+                SortOrder order = SortOrder.ASC;
+                String field = sortOption;
+                int index = sortOption.indexOf(":");
+                if (index > 0) {
+                    field = sortOption.substring(0, index);
+                    order = SortOrder.valueOf(sortOption.substring(index + 1));
+                }
+                searchSourceBuilder.sort(new FieldSortBuilder(field).order(order));
+            }
+        }
+
+        // Generate the actual request to send to ES.
+        SearchRequest searchRequest = new SearchRequest(indexName);
+        searchRequest.types(docType);
+        searchRequest.source(searchSourceBuilder);
+
+        return elasticSearchClient.search(searchRequest,RequestOptions.DEFAULT);
     }
 
     public List<String> searchRecentRunningWorkflows(int lastModifiedHoursAgoFrom, int lastModifiedHoursAgoTo) {

@@ -107,6 +107,9 @@ public class ElasticSearchProperties {
      */
     private String password;
 
+    int PRUNING_BATCH_SIZE_DEFAULT_VALUE = 2000;
+    int PRUNING_DAYS_TO_KEEP_DEFAULT_VALUE = 28;   // 4 weeks
+
     public String getUrl() {
         return url;
     }
@@ -244,5 +247,21 @@ public class ElasticSearchProperties {
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(url + "can not be converted to java.net.URL");
         }
+    }
+
+    /**
+     * @return number of days to keep workflows that are not 'Completed'
+     */
+    public int getPruningDaysToKeep()
+    {
+        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_DAYS_TO_KEEP", Integer.toString(PRUNING_DAYS_TO_KEEP_DEFAULT_VALUE)));
+    }
+
+    /**
+     * @return the number of records (wprkflows or tasks) to prune
+     */
+    public int getPruningBatchSize()
+    {
+        return Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_BATCH_SIZE", Integer.toString(PRUNING_BATCH_SIZE_DEFAULT_VALUE)));
     }
 }
