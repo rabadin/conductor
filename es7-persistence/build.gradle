@@ -16,11 +16,11 @@ plugins {
     id 'java'
 }
 
-configurations {
+/*configurations {
     // Prevent shaded dependencies from being published, while keeping them available to tests
     shadow.extendsFrom compileOnly
     testRuntime.extendsFrom compileOnly
-}
+}*/
 
 ext['elasticsearch.version'] = revElasticSearch7
 
@@ -48,9 +48,11 @@ dependencies {
 
 // Drop the classifier and delete jar task actions to replace the regular jar artifact with the shadow artifact
 shadowJar {
-    configurations = [project.configurations.shadow]
+    configurations = [project.configurations.compileClasspath]
     classifier = null
 
+    exclude 'META-INF/validation/constraints.xml'
+    exclude 'META-INF/validation.xml'
     // Service files are not included by default.
     mergeServiceFiles {
         include 'META-INF/services/*'
@@ -60,3 +62,4 @@ shadowJar {
 
 jar.enabled = false
 jar.dependsOn shadowJar
+

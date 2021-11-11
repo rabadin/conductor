@@ -16,7 +16,7 @@ plugins {
     id 'org.springframework.boot'
 }
 
-ext['elasticsearch.version'] = revElasticSearch5
+ext['elasticsearch.version'] = revElasticSearch7
 
 dependencies {
 
@@ -27,9 +27,9 @@ dependencies {
     implementation project(':conductor-cassandra-persistence')
     implementation project(':conductor-postgres-persistence')
     implementation project(':conductor-mysql-persistence')
-    implementation project(':conductor-es5-persistence')
+    //implementation project(':conductor-es5-persistence')
     //implementation project(':conductor-es6-persistence')
-    //implementation(project(path: ':conductor-es7-persistence', configuration: 'shadow'))
+    implementation(project(path: ':conductor-es7-persistence', configuration: 'shadow'))
     implementation project(':conductor-grpc-server')
 
     implementation 'org.springframework.boot:spring-boot-starter'
@@ -47,8 +47,9 @@ dependencies {
     compileOnly project(':conductor-postgres-persistence')
     compileOnly project(':conductor-cassandra-persistence')
     compile project(':conductor-contribs')
-    compile project(':conductor-es5-persistence')
+    //compile project(':conductor-es5-persistence')
     //compileOnly project(':conductor-es6-persistence')
+    compileOnly project(':conductor-es7-persistence')
     compile project(':conductor-grpc-server')
     compileOnly project(':conductor-zookeeper-lock')
     compileOnly project(':conductor-redis-lock')

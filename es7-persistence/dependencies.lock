@@ -14,6 +14,12 @@
         "com.google.guava:guava": {
             "locked": "30.0-jre"
         },
+        "com.google.inject:guice": {
+            "firstLevelTransitive": [
+                "com.netflix.conductor:conductor-core"
+            ],
+            "locked": "4.1.0"
+        },
         "com.netflix.conductor:conductor-common": {
             "project": true
         },
@@ -22,6 +28,12 @@
         },
         "commons-io:commons-io": {
             "locked": "2.7"
+        },
+        "log4j:apache-log4j-extras": {
+            "firstLevelTransitive": [
+                "com.netflix.conductor:conductor-core"
+            ],
+            "locked": "1.2.17"
         },
         "org.apache.commons:commons-lang3": {
             "locked": "3.10"
@@ -72,6 +84,12 @@
         "com.google.guava:guava": {
             "locked": "30.0-jre"
         },
+        "com.google.inject:guice": {
+            "firstLevelTransitive": [
+                "com.netflix.conductor:conductor-core"
+            ],
+            "locked": "4.1.0"
+        },
         "com.google.protobuf:protobuf-java": {
             "firstLevelTransitive": [
                 "com.netflix.conductor:conductor-common",
@@ -136,6 +154,12 @@
             ],
             "locked": "2.3.1"
         },
+        "log4j:apache-log4j-extras": {
+            "firstLevelTransitive": [
+                "com.netflix.conductor:conductor-core"
+            ],
+            "locked": "1.2.17"
+        },
         "org.apache.bval:bval-jsr": {
             "firstLevelTransitive": [
                 "com.netflix.conductor:conductor-common",
@@ -178,6 +202,12 @@
         "com.google.guava:guava": {
             "locked": "30.0-jre"
         },
+        "com.google.inject:guice": {
+            "firstLevelTransitive": [
+                "com.netflix.conductor:conductor-core"
+            ],
+            "locked": "4.1.0"
+        },
         "com.netflix.conductor:conductor-common": {
             "project": true
         },
@@ -186,6 +216,15 @@
         },
         "commons-io:commons-io": {
             "locked": "2.7"
+        },
+        "junit:junit": {
+            "locked": "4.12"
+        },
+        "log4j:apache-log4j-extras": {
+            "firstLevelTransitive": [
+                "com.netflix.conductor:conductor-core"
+            ],
+            "locked": "1.2.17"
         },
         "org.apache.commons:commons-lang3": {
             "locked": "3.10"
@@ -198,6 +237,9 @@
         },
         "org.elasticsearch.client:elasticsearch-rest-high-level-client": {
             "locked": "7.6.2"
+        },
+        "org.mockito:mockito-core": {
+            "locked": "3.1.0"
         },
         "org.springframework.boot:spring-boot-starter-log4j2": {
             "locked": "2.3.12.RELEASE"
@@ -245,6 +287,12 @@
         "com.google.guava:guava": {
             "locked": "30.0-jre"
         },
+        "com.google.inject:guice": {
+            "firstLevelTransitive": [
+                "com.netflix.conductor:conductor-core"
+            ],
+            "locked": "4.1.0"
+        },
         "com.google.protobuf:protobuf-java": {
             "firstLevelTransitive": [
                 "com.netflix.conductor:conductor-common",
@@ -309,6 +357,15 @@
             ],
             "locked": "2.3.1"
         },
+        "junit:junit": {
+            "locked": "4.12"
+        },
+        "log4j:apache-log4j-extras": {
+            "firstLevelTransitive": [
+                "com.netflix.conductor:conductor-core"
+            ],
+            "locked": "1.2.17"
+        },
         "org.apache.bval:bval-jsr": {
             "firstLevelTransitive": [
                 "com.netflix.conductor:conductor-common",
@@ -337,6 +394,9 @@
                 "com.netflix.conductor:conductor-core"
             ],
             "locked": "2.3.4"
+        },
+        "org.mockito:mockito-core": {
+            "locked": "3.1.0"
         },
         "org.springframework.boot:spring-boot-starter": {
             "locked": "2.3.12.RELEASE"
