@@ -941,7 +941,7 @@ public class ElasticSearchRestDAOV7 extends ElasticSearchBaseDAO implements Inde
                 );
 
         int batchSize = properties.getPruningBatchSize();
-        List<String> workflowIds = pruneDocs(workflowIndexName , wfQuery, WORKFLOW_DOC_TYPE, batchSize, Collections.singletonList("endTime:ASC"));
+        List<String> workflowIds = pruneDocs(workflowIndexName , wfQuery, batchSize, Collections.singletonList("endTime:ASC"));
 
         // If needed, this can be made optional by passing it as argument
         boolean includeTasks = true;
@@ -952,7 +952,7 @@ public class ElasticSearchRestDAOV7 extends ElasticSearchBaseDAO implements Inde
             List<List<String>> pages = getPages(workflowIds, pageSize);
             for (List<String> page: pages) {
                 QueryBuilder taskQuery = QueryBuilders.termsQuery("workflowId", page);
-                pruneDocs(taskIndexName, taskQuery, TASK_DOC_TYPE, taskBatchSize, null);
+                pruneDocs(taskIndexName, taskQuery, taskBatchSize, null);
             }
         }
         return workflowIds;
@@ -966,7 +966,7 @@ public class ElasticSearchRestDAOV7 extends ElasticSearchBaseDAO implements Inde
         if (taskIds.size() > 0) {
             BulkRequest bulkRequest = new BulkRequest();
             for (String taskId:taskIds) {
-                bulkRequest.add(new DeleteRequest(taskIndexName, docType, taskId));
+                bulkRequest.add(new DeleteRequest(taskIndexName, taskId));
             }
             pruneBulkRecords(bulkRequest, docType, taskIds.size(), 0);
         }
@@ -1000,29 +1000,29 @@ public class ElasticSearchRestDAOV7 extends ElasticSearchBaseDAO implements Inde
      * @param sortOptions docs will be sorted before search.
      * @return list of workflow Ids that were pruned.
      * ** */
-    private List<String> pruneDocs(String indexName, QueryBuilder q, String docType, int batchSize, List<String> sortOptions) {
+    private List<String> pruneDocs(String indexName, QueryBuilder q, int batchSize, List<String> sortOptions) {
         //SearchResult<String> docIds;
         List<String> docIds = new LinkedList<>();
         long totalDocs = 0;
         long searchTimeinMills = 0;
         try {
-            SearchResponse response = getSearchResponse(indexName, q, 0, batchSize, sortOptions, docType, false);
+            SearchResponse response = getSearchResponse(indexName, q, 0, batchSize, sortOptions, false);
             totalDocs = response.getHits().getTotalHits().value;
             searchTimeinMills = response.getTook().getMillis();
 
             if (totalDocs > 0) {
                 BulkRequest bulkRequest = new BulkRequest();
                 response.getHits().forEach(hit -> {
-                    bulkRequest.add(new DeleteRequest(indexName, docType, hit.getId()));
+                    bulkRequest.add(new DeleteRequest(indexName, hit.getId()));
                     docIds.add(hit.getId());
                 });
-                pruneBulkRecords(bulkRequest, docType, totalDocs, searchTimeinMills);
+                pruneBulkRecords(bulkRequest, indexName, totalDocs, searchTimeinMills);
             }
             else {
-                logger.info("No ES records to prune for '{}'", docType);
+                logger.info("No ES records to prune for '{}'", indexName);
             }
         } catch (IOException e) {
-            logger.error("Unable to communicate with ES to prune '{}' due to {}", docType, e.getMessage());
+            logger.error("Unable to communicate with ES to prune '{}' due to {}", indexName, e.getMessage());
         }
 
         return docIds;
@@ -1031,26 +1031,26 @@ public class ElasticSearchRestDAOV7 extends ElasticSearchBaseDAO implements Inde
     /**
      * prune records as a bulk request.  This is efficient compared to individual doc deletion.
      * @param bulkRequest ES request object containing doc Ids.
-     * @param docType Either workflow or task doctype.
+     * @param indexName index name.
      * @param totalDocs total documents that have to be pruned.
      * @param searchTimeinMills time taken to search the docs that will be pruned.
      ** */
-    private void pruneBulkRecords(BulkRequest bulkRequest, String docType, long totalDocs, long searchTimeinMills) {
+    private void pruneBulkRecords(BulkRequest bulkRequest, String indexName, long totalDocs, long searchTimeinMills) {
         long pruneTimeinMills = 0;
         long prunedDocs = 0;
         try {
             BulkResponse bulkResponse = elasticSearchClient.bulk(bulkRequest,RequestOptions.DEFAULT);
             pruneTimeinMills = bulkResponse.getTook().getMillis();
             prunedDocs = bulkResponse.getItems().length;
-            logger.info("ES pruning completed for '{}': Total {}, Pruned {}, SearchTime {} ms, PruningTime {} ms", docType, totalDocs, prunedDocs, searchTimeinMills, pruneTimeinMills);
+            logger.info("ES pruning completed for '{}': Total {}, Pruned {}, SearchTime {} ms, PruningTime {} ms", indexName, totalDocs, prunedDocs, searchTimeinMills, pruneTimeinMills);
         } catch (IOException e) {
-            logger.error("Failed to prune '{}' from ES index due to {}", docType, e.getMessage());
+            logger.error("Failed to prune '{}' from ES index due to {}", indexName, e.getMessage());
         } catch (Exception e) {
-            logger.error("Failed to process bulk pruning response for '{}' from index due to {}", docType, e.getMessage());
+            logger.error("Failed to process bulk pruning response for '{}' from index due to {}", indexName, e.getMessage());
         }
     }
 
-    private SearchResponse getSearchResponse(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, String docType, boolean includeDocs) throws IOException {
+    private SearchResponse getSearchResponse(String indexName, QueryBuilder queryBuilder, int start, int size, List<String> sortOptions, boolean includeDocs) throws IOException {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.from(start);
@@ -1073,7 +1073,6 @@ public class ElasticSearchRestDAOV7 extends ElasticSearchBaseDAO implements Inde
 
         // Generate the actual request to send to ES.
         SearchRequest searchRequest = new SearchRequest(indexName);
-        searchRequest.types(docType);
         searchRequest.source(searchSourceBuilder);
 
         return elasticSearchClient.search(searchRequest,RequestOptions.DEFAULT);
