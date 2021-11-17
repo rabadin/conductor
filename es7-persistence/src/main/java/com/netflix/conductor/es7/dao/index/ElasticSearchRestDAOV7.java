@@ -961,14 +961,13 @@ public class ElasticSearchRestDAOV7 extends ElasticSearchBaseDAO implements Inde
     @Override
     public void pruneTasks(List<String> taskIds) {
 
-        String docType = TASK_DOC_TYPE;
         // Prune tasks that that belonged to deleted workflows
         if (taskIds.size() > 0) {
             BulkRequest bulkRequest = new BulkRequest();
             for (String taskId:taskIds) {
                 bulkRequest.add(new DeleteRequest(taskIndexName, taskId));
             }
-            pruneBulkRecords(bulkRequest, docType, taskIds.size(), 0);
+            pruneBulkRecords(bulkRequest, taskIndexName, taskIds.size(), 0);
         }
     }
 
