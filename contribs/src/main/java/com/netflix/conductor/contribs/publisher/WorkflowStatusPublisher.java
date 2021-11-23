@@ -80,7 +80,7 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
 
     @Override
     public void onWorkflowCompleted(Workflow workflow) {
-        LOGGER.info("workflows completion {} {}",  workflow.getWorkflowId(), workflow.getWorkflowName());
+        LOGGER.debug("workflows completion {} {}",  workflow.getWorkflowId(), workflow.getWorkflowName());
         try {
             blockingQueue.put(workflow);
         } catch (Exception e){
@@ -91,7 +91,7 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
 
     @Override
     public void onWorkflowTerminated(Workflow workflow) {
-        LOGGER.info("workflows termination {} {}",  workflow.getWorkflowId(), workflow.getWorkflowName());
+        LOGGER.debug("workflows termination {} {}",  workflow.getWorkflowId(), workflow.getWorkflowName());
         try {
             blockingQueue.put(workflow);
         } catch (Exception e){
@@ -102,7 +102,7 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
 
     @Override
     public void onWorkflowCompletedIfEnabled(Workflow workflow) {
-        onWorkflowTerminated(workflow);
+        onWorkflowCompleted(workflow);
 
     }
 
@@ -112,7 +112,6 @@ public class WorkflowStatusPublisher implements WorkflowStatusListener {
     }
 
      private void publishWorkflowNotification(WorkflowNotification workflowNotification) throws IOException {
-        LOGGER.info("workflows {} publish is successful.", workflowNotification.getWorkflowId() );
         String jsonWorkflow = workflowNotification.toJsonString();
         rcm.postNotification(
                 RestClientManager.NotificationType.WORKFLOW,
