@@ -27,7 +27,6 @@ import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 
-//@Singleton
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Component
 public class RestClientManager {
@@ -42,7 +41,6 @@ public class RestClientManager {
         WORKFLOW
     };
 
-    //@Inject
     public RestClientManager(PublisherConfiguration config){
         this.config = config;
         this.client = prepareClient();
