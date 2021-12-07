@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 public class DoWhile extends WorkflowSystemTask {
 
 	private ParametersUtils parametersUtils;
+	private int MAX_ALLOWED_ITERATION = 3;
 
 	public DoWhile() {
 		super("DO_WHILE");
@@ -103,9 +104,17 @@ public class DoWhile extends WorkflowSystemTask {
 		}
 		boolean shouldContinue;
 		try {
+			logger.info("RRR {} {} {}", task.getTaskType(), task.getTaskId(), task.getIteration());
+
 			shouldContinue = getEvaluatedCondition(workflow, task, workflowExecutor);
 			logger.debug("taskid {} condition evaluated to {}", task.getTaskId(), shouldContinue);
 			if (shouldContinue) {
+				if (task.getIteration() == MAX_ALLOWED_ITERATION) {
+					String message = String.format("Maximum 500 iteration is allowed for task %s %s", task.getTaskType(), task.getTaskId());
+					logger.error(message);
+					logger.error("Marking task {} failed with error.", task.getTaskId());
+					return updateLoopTask(task, Status.FAILED_WITH_TERMINAL_ERROR, message);
+				}
                 task.setIteration(task.getIteration() + 1);
                 return scheduleNextIteration(task, workflow, workflowExecutor);
 			} else {
