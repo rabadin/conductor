@@ -222,15 +222,15 @@
             ]
         },
         "org.apache.logging.log4j:log4j-api": {
-            "locked": "2.9.1",
-            "requested": "2.9.1",
+            "locked": "2.15.0",
+            "requested": "2.15.0",
             "transitive": [
                 "org.apache.logging.log4j:log4j-core"
             ]
         },
         "org.apache.logging.log4j:log4j-core": {
-            "locked": "2.9.1",
-            "requested": "2.9.1"
+            "locked": "2.15.0",
+            "requested": "2.15.0"
         },
         "org.glassfish:javax.el": {
             "locked": "3.0.0",
@@ -582,15 +582,15 @@
         },
         "org.apache.logging.log4j:log4j-api": {
             "locked": "2.11.1",
-            "requested": "2.9.1",
+            "requested": "2.15.0",
             "transitive": [
                 "org.apache.logging.log4j:log4j-core",
                 "org.elasticsearch:elasticsearch"
             ]
         },
         "org.apache.logging.log4j:log4j-core": {
-            "locked": "2.9.1",
-            "requested": "2.9.1"
+            "locked": "2.15.0",
+            "requested": "2.15.0"
         },
         "org.apache.lucene:lucene-analyzers-common": {
             "locked": "7.5.0",
@@ -1390,15 +1390,15 @@
             ]
         },
         "org.apache.logging.log4j:log4j-api": {
-            "locked": "2.9.1",
-            "requested": "2.9.1",
+            "locked": "2.15.0",
+            "requested": "2.15.0",
             "transitive": [
                 "org.apache.logging.log4j:log4j-core"
             ]
         },
         "org.apache.logging.log4j:log4j-core": {
-            "locked": "2.9.1",
-            "requested": "2.9.1"
+            "locked": "2.15.0",
+            "requested": "2.15.0"
         },
         "org.glassfish:javax.el": {
             "locked": "3.0.0",
@@ -1715,15 +1715,15 @@
             ]
         },
         "org.apache.logging.log4j:log4j-api": {
-            "locked": "2.9.1",
-            "requested": "2.9.1",
+            "locked": "2.15.0",
+            "requested": "2.15.0",
             "transitive": [
                 "org.apache.logging.log4j:log4j-core"
             ]
         },
         "org.apache.logging.log4j:log4j-core": {
-            "locked": "2.9.1",
-            "requested": "2.9.1"
+            "locked": "2.15.0",
+            "requested": "2.15.0"
         },
         "org.glassfish:javax.el": {
             "locked": "3.0.0",
@@ -1977,15 +1977,15 @@
             ]
         },
         "org.apache.logging.log4j:log4j-api": {
-            "locked": "2.9.1",
-            "requested": "2.9.1",
+            "locked": "2.15.0",
+            "requested": "2.15.0",
             "transitive": [
                 "org.apache.logging.log4j:log4j-core"
             ]
         },
         "org.apache.logging.log4j:log4j-core": {
-            "locked": "2.9.1",
-            "requested": "2.9.1"
+            "locked": "2.15.0",
+            "requested": "2.15.0"
         },
         "org.glassfish:javax.el": {
             "locked": "3.0.0",
@@ -2702,15 +2702,15 @@
         },
         "org.apache.logging.log4j:log4j-api": {
             "locked": "2.11.1",
-            "requested": "2.9.1",
+            "requested": "2.15.0",
             "transitive": [
                 "org.apache.logging.log4j:log4j-core",
                 "org.elasticsearch:elasticsearch"
             ]
         },
         "org.apache.logging.log4j:log4j-core": {
-            "locked": "2.9.1",
-            "requested": "2.9.1"
+            "locked": "2.15.0",
+            "requested": "2.15.0"
         },
         "org.apache.lucene:lucene-analyzers-common": {
             "locked": "7.5.0",
@@ -3321,15 +3321,15 @@
         },
         "org.apache.logging.log4j:log4j-api": {
             "locked": "2.11.1",
-            "requested": "2.9.1",
+            "requested": "2.15.0",
             "transitive": [
                 "org.apache.logging.log4j:log4j-core",
                 "org.elasticsearch:elasticsearch"
             ]
         },
         "org.apache.logging.log4j:log4j-core": {
-            "locked": "2.9.1",
-            "requested": "2.9.1"
+            "locked": "2.15.0",
+            "requested": "2.15.0"
         },
         "org.apache.lucene:lucene-analyzers-common": {
             "locked": "7.5.0",
@@ -3940,15 +3940,15 @@
         },
         "org.apache.logging.log4j:log4j-api": {
             "locked": "2.11.1",
-            "requested": "2.9.1",
+            "requested": "2.15.0",
             "transitive": [
                 "org.apache.logging.log4j:log4j-core",
                 "org.elasticsearch:elasticsearch"
             ]
         },
         "org.apache.logging.log4j:log4j-core": {
-            "locked": "2.9.1",
-            "requested": "2.9.1"
+            "locked": "2.15.0",
+            "requested": "2.15.0"
         },
         "org.apache.lucene:lucene-analyzers-common": {
             "locked": "7.5.0",
@@ -4559,15 +4559,15 @@
         },
         "org.apache.logging.log4j:log4j-api": {
             "locked": "2.11.1",
-            "requested": "2.9.1",
+            "requested": "2.15.0",
             "transitive": [
                 "org.apache.logging.log4j:log4j-core",
                 "org.elasticsearch:elasticsearch"
             ]
         },
         "org.apache.logging.log4j:log4j-core": {
-            "locked": "2.9.1",
-            "requested": "2.9.1"
+            "locked": "2.15.0",
+            "requested": "2.15.0"
         },
         "org.apache.lucene:lucene-analyzers-common": {
             "locked": "7.5.0",
