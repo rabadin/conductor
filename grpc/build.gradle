@@ -18,7 +18,7 @@ repositories{
 dependencies {
     compile project(':conductor-common')
     compile project(':conductor-core')
-    
+
     // TODO: Commented for now since bintray link is broken.
     //protobuf 'io.chaossystems.grpc:grpc-healthcheck:1.0.+:protos'
     compile "com.google.api.grpc:proto-google-common-protos:1.0.0"
