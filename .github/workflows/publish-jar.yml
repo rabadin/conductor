@@ -19,17 +19,18 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
             #- name: Build with Gradle
-            #  run: ./gradlew conductor-server:shadowJar --stacktrace
-      - name: Build with Gradle
-        run: mkdir -p ./server/build/libs/
-      - name: Build with Gradle
-        run: echo "test" > ./server/build/libs/conductor-server-test-all.jar
-      - uses: "marvinpinto/action-automatic-releases@latest"
+            #run: ./gradlew conductor-server:shadowJar --stacktrace
+      - name: Build artifact
+        run: mkdir -p server/build/libs && echo "test" > server/build/libs/conductor-server-test-all.jar
+      - name: Create build tag
+        run: |
+          echo "::set-output name=TAG::$(git describe --abbrev=0 --tags)-$${{ github.run_number }}+${{ github.sha }}"
+        id: tag
+      - name: Upload conductor-server JAR
+        uses: ncipollo/release-action@v1
         with:
-          repo_token: "${{ github.token }}"
-          prerelease: true
-          automatic_release_tag: latest
-          title: "Development Build"
-          files: |
-            server/build/libs/conductor-server-*-all.jar
+          artifacts: "server/build/libs/conductor-server-*-all.jar"
+          commit: "${{ github.sha }}"
+          tag: ${{ steps.tag.outputs.TAG }}
+          token: ${{ github.token }}
 
