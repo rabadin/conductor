@@ -18,6 +18,14 @@ jobs:
         with:
           java-version: '8'
           distribution: 'adopt'
+            #- name: Build with Gradle
+            #  run: ./gradlew conductor-server:shadowJar --stacktrace
       - name: Build with Gradle
-        run: ./gradlew conductor-server:shadowJar --stacktrace
+        run: mkdir -p ./server/build/libs/
+      - name: Build with Gradle
+        run: echo "test" > ./server/build/libs/conductor-server-test-all.jar
+      - uses: actions/upload-artifact@v2
+        with:
+          name: conductor-server-${GITHUB_SHA}.jar
+          path: ./server/build/libs/conductor-server-*-all.jar
 
