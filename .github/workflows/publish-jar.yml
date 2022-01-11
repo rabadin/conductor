@@ -24,8 +24,12 @@ jobs:
         run: mkdir -p ./server/build/libs/
       - name: Build with Gradle
         run: echo "test" > ./server/build/libs/conductor-server-test-all.jar
-      - uses: actions/upload-artifact@v2
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          name: conductor-server-${GITHUB_SHA}.jar
-          path: ./server/build/libs/conductor-server-*-all.jar
+          repo_token: "${{ github.token }}"
+          prerelease: true
+          automatic_release_tag: latest
+          title: "Development Build"
+          files: |
+            server/build/libs/conductor-server-*-all.jar
 
