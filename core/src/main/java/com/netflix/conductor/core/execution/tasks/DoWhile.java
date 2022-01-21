@@ -110,8 +110,6 @@ public class DoWhile extends WorkflowSystemTask {
 		}
 		boolean shouldContinue;
 		try {
-			logger.info("RRR {} {} {}", task.getTaskType(), task.getTaskId(), task.getIteration());
-
 			shouldContinue = getEvaluatedCondition(workflow, task, workflowExecutor);
 			logger.debug("taskid {} condition evaluated to {}", task.getTaskId(), shouldContinue);
 			if (shouldContinue) {
