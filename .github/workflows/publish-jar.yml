@@ -1,0 +1,34 @@
+name: Build and publish JAR
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+      - name: Build with Gradle
+        run: ./gradlew conductor-server:shadowJar --stacktrace
+      - name: Create build tag
+        run: |
+          echo "::set-output name=TAG::$(git describe --abbrev=0 --tags)-build.${{ github.run_number }}+${{ github.sha }}"
+        id: tag
+      - name: Upload conductor-server JAR
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "server/build/libs/conductor-server-*-all.jar"
+          commit: ${{ github.sha }}
+          tag: ${{ steps.tag.outputs.TAG }}
+          token: ${{ github.token }}
+
