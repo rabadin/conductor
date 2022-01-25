@@ -105,7 +105,7 @@ public class TaskSummary {
 	private int retryCount;
 
 	@ProtoField(id = 23)
-	private boolean loopoverTask;
+	private boolean loopOverTask;
 
 	@ProtoField(id = 24)
 	private int iteration;
@@ -135,7 +135,7 @@ public class TaskSummary {
 		this.taskDescription = task.getTaskDescription();
 		this.referenceTaskName = task.getReferenceTaskName();
 		this.retryCount = task.getRetryCount();
-		this.loopoverTask = task.isLoopOverTask();
+		this.loopOverTask = task.isLoopOverTask();
 		this.iteration = task.getIteration();
 
 		if (task.getInputData() != null) {
@@ -486,15 +486,19 @@ public class TaskSummary {
 	/**
 	 * @return the retryCount
 	 */
-	public boolean getLoopoverTask() {
-		return loopoverTask;
+	public boolean getLoopOverTask() {
+		return loopOverTask;
 	}
 
 	/**
-	 * @param loopoverTask the retryCount to set
+	 * @param loopOverTask the retryCount to set
 	 */
-	public void setLoopoverTask(boolean loopoverTask) {
-		this.loopoverTask = loopoverTask;
+	public void setLoopOverTask(boolean loopOverTask) {
+		this.loopOverTask = loopOverTask;
+	}
+
+	public boolean isLoopOverTask() {
+		return loopOverTask;
 	}
 
 	/**
@@ -537,7 +541,7 @@ public class TaskSummary {
             getTaskDescription().equals(that.getTaskDescription()) &&
 			getReferenceTaskName().equals(that.getReferenceTaskName()) &&
 			getRetryCount() == that.getRetryCount() &&
-			getLoopoverTask() == that.getLoopoverTask() &&
+			getLoopOverTask() == that.getLoopOverTask() &&
 			getIteration()	== that.getIteration() &&
 			getTaskId().equals(that.getTaskId());
 	}
@@ -548,6 +552,6 @@ public class TaskSummary {
 			getUpdateTime(), getEndTime(), getStatus(), getReasonForIncompletion(), getExecutionTime(),
 			getQueueWaitTime(),
 			getTaskDefName(), getTaskType(), getTaskId(), getWorkflowPriority(), getTaskDescription(),
-			getReferenceTaskName(), getRetryCount(), getLoopoverTask(), getIteration());
+			getReferenceTaskName(), getRetryCount(), getLoopOverTask(), getIteration());
 	}
 }
