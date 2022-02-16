@@ -21,6 +21,7 @@ import com.netflix.conductor.common.metadata.tasks.Task.Status;
 import com.netflix.conductor.common.metadata.tasks.TaskDef;
 import com.netflix.conductor.common.run.Workflow;
 import com.netflix.conductor.common.utils.TaskUtils;
+import com.netflix.conductor.core.config.SystemPropertiesConfiguration;
 import com.netflix.conductor.core.events.ScriptEvaluator;
 import com.netflix.conductor.core.execution.ParametersUtils;
 import com.netflix.conductor.core.execution.TerminateWorkflowException;
@@ -35,17 +36,22 @@ import javax.script.ScriptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * @author Manan
  *
  */
 public class DoWhile extends WorkflowSystemTask {
-
+	String TASK_DO_WHILE_MAX_ALLOWED_ITERATION = "task.dowhile.max.allowed.iteration";
+	int TASK_DO_WHILE_MAX_ALLOWED_ITERATION_DEFAULT_VALUE = 100;
 	private ParametersUtils parametersUtils;
+	SystemPropertiesConfiguration config = new SystemPropertiesConfiguration();
+	private final int MAX_ALLOWED_ITERATION = config.getIntProperty(TASK_DO_WHILE_MAX_ALLOWED_ITERATION, TASK_DO_WHILE_MAX_ALLOWED_ITERATION_DEFAULT_VALUE);
 
 	public DoWhile() {
 		super("DO_WHILE");
 		this.parametersUtils = new ParametersUtils();
+
 	}
 
 	Logger logger = LoggerFactory.getLogger(DoWhile.class);
@@ -106,6 +112,12 @@ public class DoWhile extends WorkflowSystemTask {
 			shouldContinue = getEvaluatedCondition(workflow, task, workflowExecutor);
 			logger.debug("taskid {} condition evaluated to {}", task.getTaskId(), shouldContinue);
 			if (shouldContinue) {
+				if (task.getIteration() == MAX_ALLOWED_ITERATION) {
+					String message = String.format("Terminating Loop <%s>. Maximum %d iteration is allowed for task id %s", task.getReferenceTaskName(), MAX_ALLOWED_ITERATION, task.getTaskId());
+					logger.error(message);
+					logger.error("Marking task {} failed with error.", task.getTaskId());
+					return updateLoopTask(task, Status.FAILED_WITH_TERMINAL_ERROR, message);
+				}
                 task.setIteration(task.getIteration() + 1);
                 return scheduleNextIteration(task, workflow, workflowExecutor);
 			} else {

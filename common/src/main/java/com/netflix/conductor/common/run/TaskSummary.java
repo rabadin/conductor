@@ -104,6 +104,11 @@ public class TaskSummary {
 	@ProtoField(id = 22)
 	private int retryCount;
 
+	@ProtoField(id = 23)
+	private boolean loopOverTask;
+
+	@ProtoField(id = 24)
+	private int iteration;
 
 	public TaskSummary() {
     }
@@ -130,6 +135,8 @@ public class TaskSummary {
 		this.taskDescription = task.getTaskDescription();
 		this.referenceTaskName = task.getReferenceTaskName();
 		this.retryCount = task.getRetryCount();
+		this.loopOverTask = task.isLoopOverTask();
+		this.iteration = task.getIteration();
 
 		if (task.getInputData() != null) {
 			ObjectMapper om = new ObjectMapper();
@@ -476,6 +483,41 @@ public class TaskSummary {
 		this.retryCount = retryCount;
 	}
 
+	/**
+	 * @return the loopOverTask
+	 */
+	public boolean getLoopOverTask() {
+		return loopOverTask;
+	}
+
+	/**
+	 * @param loopOverTask the loopOverTask to set
+	 */
+	public void setLoopOverTask(boolean loopOverTask) {
+		this.loopOverTask = loopOverTask;
+	}
+
+	/**
+	 * @return the loopOverTask
+	 */
+	public boolean isLoopOverTask() {
+		return loopOverTask;
+	}
+
+	/**
+	 * @return the iteration
+	 */
+	public int getIteration() {
+		return iteration;
+	}
+
+	/**
+	 * @param iteration the iteration to set
+	 */
+	public void setIteration(int iteration) {
+		this.iteration = iteration;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -502,6 +544,8 @@ public class TaskSummary {
             getTaskDescription().equals(that.getTaskDescription()) &&
 			getReferenceTaskName().equals(that.getReferenceTaskName()) &&
 			getRetryCount() == that.getRetryCount() &&
+			getLoopOverTask() == that.getLoopOverTask() &&
+			getIteration()	== that.getIteration() &&
 			getTaskId().equals(that.getTaskId());
 	}
 
@@ -511,6 +555,6 @@ public class TaskSummary {
 			getUpdateTime(), getEndTime(), getStatus(), getReasonForIncompletion(), getExecutionTime(),
 			getQueueWaitTime(),
 			getTaskDefName(), getTaskType(), getTaskId(), getWorkflowPriority(), getTaskDescription(),
-			getReferenceTaskName(), getRetryCount());
+			getReferenceTaskName(), getRetryCount(), getLoopOverTask(), getIteration());
 	}
 }
