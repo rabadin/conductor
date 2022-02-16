@@ -47,7 +47,6 @@ public class DoWhile extends WorkflowSystemTask {
 	private ParametersUtils parametersUtils;
 	SystemPropertiesConfiguration config = new SystemPropertiesConfiguration();
 	private final int MAX_ALLOWED_ITERATION = config.getIntProperty(TASK_DO_WHILE_MAX_ALLOWED_ITERATION, TASK_DO_WHILE_MAX_ALLOWED_ITERATION_DEFAULT_VALUE);
-	//private int MAX_ALLOWED_ITERATION = Integer.parseInt(System.getenv().getOrDefault("ENV_WORKFLOW_PRUNING_INTERVAL_TIME_MINUTES", Integer.toString(PRUNING_INTERVAL_TIME_MINUTES_DEFAULT_VALUE)));
 
 	public DoWhile() {
 		super("DO_WHILE");

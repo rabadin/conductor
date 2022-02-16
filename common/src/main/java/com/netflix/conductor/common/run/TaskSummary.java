@@ -484,32 +484,35 @@ public class TaskSummary {
 	}
 
 	/**
-	 * @return the retryCount
+	 * @return the loopOverTask
 	 */
 	public boolean getLoopOverTask() {
 		return loopOverTask;
 	}
 
 	/**
-	 * @param loopOverTask the retryCount to set
+	 * @param loopOverTask the loopOverTask to set
 	 */
 	public void setLoopOverTask(boolean loopOverTask) {
 		this.loopOverTask = loopOverTask;
 	}
 
+	/**
+	 * @return the loopOverTask
+	 */
 	public boolean isLoopOverTask() {
 		return loopOverTask;
 	}
 
 	/**
-	 * @return the retryCount
+	 * @return the iteration
 	 */
 	public int getIteration() {
 		return iteration;
 	}
 
 	/**
-	 * @param iteration the retryCount to set
+	 * @param iteration the iteration to set
 	 */
 	public void setIteration(int iteration) {
 		this.iteration = iteration;
